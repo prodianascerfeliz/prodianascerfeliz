@@ -198,8 +198,8 @@ function showSuccess(data, zodiac, ascendant) {
 
 // Send to Google Sheets via Apps Script Web App
 async function sendToGoogleSheets(data) {
-    // IMPORTANTE: Substitua pela URL do seu Google Apps Script Web App
-    const scriptUrl = 'SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI';
+    // URL do Google Apps Script Web App
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycby5HS21FNsOw8T66p7_Y2TDcUNW4N_4FM6cK5pfQ-vJ8yFQ4JnhyWchIJTSPHYqmA/exec';
     
     const response = await fetch(scriptUrl, {
         method: 'POST',
@@ -212,5 +212,6 @@ async function sendToGoogleSheets(data) {
     
     // Com no-cors, não conseguimos verificar a resposta
     // Mas se não der erro, significa que foi enviado
+    console.log('✅ Dados enviados para Google Sheets');
     return true;
 }
