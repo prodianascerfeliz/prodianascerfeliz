@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Newsletter diária personalizada. Sabe das coisas antes de todo mundo.">
+    <title>Pro dia nascer Feliz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style-v2.css">
+</head>
+<body>
+    <!-- Animated Sun Background -->
+    <div class="sun-container">
+        <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF6B35;#FFD23F;#FF6B35" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                    <stop offset="100%" style="stop-color:#FF8C61;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF8C61;#FFEB99;#FF8C61" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="60" fill="url(#sunGradient)">
+                <animate attributeName="r" values="60;65;60" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <!-- Sun rays -->
+            <g class="rays" transform="translate(100, 100)">
+                <line x1="0" y1="-80" x2="0" y2="-95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round">
+                    <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+                </line>
+                <line x1="56" y1="-56" x2="67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="80" y1="0" x2="95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="56" y1="56" x2="67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="0" y1="80" x2="0" y2="95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="-56" y1="56" x2="-67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="-80" y1="0" x2="-95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                <line x1="-56" y1="-56" x2="-67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+            </g>
+        </svg>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Hero -->
+        <header class="hero">
+            <h1 class="title">
+                <span class="title-line">Pro dia</span>
+                <span class="title-line accent">nascer</span>
+                <span class="title-line">Feliz</span>
+            </h1>
+            <p class="subtitle">Você, mas antes de todo mundo</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Hook Section -->
+            <section class="section hook-section">
+                <div class="hook-time">08:30</div>
+                <p class="hook-text">
+                    3 minutos no email.<br>
+                    Você vira <em>aquela pessoa</em> que sabe.
+                </p>
+            </section>
+
+            <!-- Value Grid -->
+            <section class="section value-section">
+                <div class="value-grid">
+                    <div class="value-item">
+                        <span class="value-number">01</span>
+                        <p>Horóscopo que não mente pra você</p>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-number">02</span>
+                        <p>Trends 2 horas antes de viralizar</p>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-number">03</span>
+                        <p>Conspiração que você vai contar no almoço</p>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-number">04</span>
+                        <p>Bastidores que influencer esconde</p>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-number">05</span>
+                        <p>Clima + aquela dica esperta</p>
+                    </div>
+                    <div class="value-item">
+                        <span class="value-number">06</span>
+                        <p>Sua missão personalizada</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="section cta-section">
+                <p class="cta-text">5 perguntas. A gente calcula seu mapa. Você começa amanhã.</p>
+                <button class="cta-button" onclick="startQuiz()">Tá dentro →</button>
+            </section>
+
+            <!-- Quiz Form -->
+            <section class="quiz-container" id="quiz-container" style="display: none;">
+                <form id="quiz-form" class="quiz-form">
+                    <!-- Question 1 -->
+                    <div class="quiz-question active" id="q1">
+                        <span class="question-number">01/05</span>
+                        <h2 class="question-title">Como você começa o dia?</h2>
+                        <div class="question-options">
+                            <label class="option">
+                                <input type="radio" name="q1" value="instagram" required>
+                                <span class="option-text">Scrollando Instagram na cama</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q1" value="news">
+                                <span class="option-text">Lendo notícias</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q1" value="coffee">
+                                <span class="option-text">Café em silêncio</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q1" value="rush">
+                                <span class="option-text">Já atrasado</span>
+                            </label>
+                        </div>
+                        <button type="button" class="btn-next" onclick="nextQuestion(2)">Próxima</button>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="quiz-question" id="q2">
+                        <span class="question-number">02/05</span>
+                        <h2 class="question-title">Seu guilty pleasure:</h2>
+                        <div class="question-options">
+                            <label class="option">
+                                <input type="radio" name="q2" value="conspiracy" required>
+                                <span class="option-text">Teorias da conspiração</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q2" value="gossip">
+                                <span class="option-text">Fofoca de celebridade</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q2" value="horoscope">
+                                <span class="option-text">Horóscopo e astrologia</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q2" value="trends">
+                                <span class="option-text">Trends e memes</span>
+                            </label>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn-back" onclick="prevQuestion(1)">← Voltar</button>
+                            <button type="button" class="btn-next" onclick="nextQuestion(3)">Próxima</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="quiz-question" id="q3">
+                        <span class="question-number">03/05</span>
+                        <h2 class="question-title">No grupo, você é:</h2>
+                        <div class="question-options">
+                            <label class="option">
+                                <input type="radio" name="q3" value="facts" required>
+                                <span class="option-text">Quem manda os fatos</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q3" value="memes">
+                                <span class="option-text">Quem manda os memes</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q3" value="listener">
+                                <span class="option-text">Quem mais ouve</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="q3" value="organizer">
+                                <span class="option-text">Quem organiza os rolês</span>
+                            </label>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn-back" onclick="prevQuestion(2)">← Voltar</button>
+                            <button type="button" class="btn-next" onclick="nextQuestion(4)">Próxima</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 - Personal Data -->
+                    <div class="quiz-question" id="q4">
+                        <span class="question-number">04/05</span>
+                        <h2 class="question-title">Seus dados:</h2>
+                        <div class="question-fields">
+                            <input type="text" name="name" placeholder="Nome" required>
+                            <input type="email" name="email" placeholder="Email" required>
+                            <input type="text" name="city" placeholder="Cidade" required>
+                            <div class="field-group">
+                                <input type="date" name="birthdate" placeholder="Nascimento" required>
+                                <input type="time" name="birthtime" placeholder="Hora (opcional)">
+                            </div>
+                            <p class="privacy-note">🔒 Privado. Nunca compartilhado.</p>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn-back" onclick="prevQuestion(3)">← Voltar</button>
+                            <button type="button" class="btn-next" onclick="nextQuestion(5)">Próxima</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 - Interest -->
+                    <div class="quiz-question" id="q5">
+                        <span class="question-number">05/05</span>
+                        <h2 class="question-title">O que te interessa mais?</h2>
+                        <div class="question-options">
+                            <label class="option">
+                                <input type="radio" name="interest" value="career" required>
+                                <span class="option-text">Carreira e produtividade</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="interest" value="lifestyle">
+                                <span class="option-text">Lifestyle e bem-estar</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="interest" value="culture">
+                                <span class="option-text">Cultura e entretenimento</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="interest" value="all">
+                                <span class="option-text">Tudo misturado</span>
+                            </label>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn-back" onclick="prevQuestion(4)">← Voltar</button>
+                            <button type="submit" class="btn-submit">Tá dentro →</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Success -->
+                <div id="success-message" class="success-message" style="display: none;">
+                    <div class="success-icon">✓</div>
+                    <h2 class="success-title">Bem-vindo</h2>
+                    <p id="result-text" class="success-text"></p>
+                    <p class="success-info">Amanhã, 8h30, no seu email.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 — <a href="mailto:contato@prodianascerfeliz.com.br">Contato</a></p>
+        </footer>
+    </div>
+
+    <script src="script-v2.js"></script>
+</body>
+</html>
