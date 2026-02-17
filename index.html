@@ -234,12 +234,28 @@
                         <span class="question-number">04/05</span>
                         <h2 class="question-title">Seus dados:</h2>
                         <div class="question-fields">
-                            <input type="text" name="name" placeholder="Nome" required>
-                            <input type="email" name="email" placeholder="Email" required>
-                            <input type="text" name="cep" id="cep" placeholder="CEP (ex: 01310-100)" maxlength="9" required>
+                            <div class="field-wrapper">
+                                <input type="text" name="name" id="field-name" placeholder="Nome completo" required>
+                                <span class="field-error" id="error-name"></span>
+                            </div>
+                            <div class="field-wrapper">
+                                <input type="email" name="email" id="field-email" placeholder="Email" required>
+                                <span class="field-error" id="error-email"></span>
+                            </div>
+                            <div class="field-wrapper">
+                                <input type="tel" name="phone" id="field-phone" placeholder="Celular (ex: 11 99999-9999)" maxlength="15" required>
+                                <span class="field-error" id="error-phone"></span>
+                            </div>
+                            <div class="field-wrapper">
+                                <input type="text" name="cep" id="cep" placeholder="CEP (ex: 01310-100)" maxlength="9" required>
+                                <span class="field-error" id="error-cep"></span>
+                            </div>
                             <input type="text" name="city" id="city" placeholder="Cidade" readonly style="background: #f5f5f5;">
                             <div class="field-group">
-                                <input type="date" name="birthdate" placeholder="Nascimento" required>
+                                <div class="field-wrapper">
+                                    <input type="date" name="birthdate" id="field-birthdate" placeholder="Nascimento" required>
+                                    <span class="field-error" id="error-birthdate"></span>
+                                </div>
                                 <input type="time" name="birthtime" placeholder="Hora (opcional)">
                             </div>
                             <p class="privacy-note">🔒 Privado. Nunca compartilhado.</p>
@@ -248,19 +264,21 @@
                         <!-- Opt-in Section -->
                         <div class="opt-in-section">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="accept_newsletter" id="accept_newsletter" required>
+                                <input type="checkbox" name="accept_newsletter" id="accept_newsletter">
                                 <span class="checkbox-text">Aceito receber a newsletter diária "Pro dia nascer Feliz" no meu email</span>
                             </label>
+                            <span class="field-error" id="error-newsletter"></span>
                             
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="accept_privacy" id="accept_privacy" required>
+                            <label class="checkbox-label" style="margin-top: 16px;">
+                                <input type="checkbox" name="accept_privacy" id="accept_privacy">
                                 <span class="checkbox-text">Li e concordo com a <a href="privacidade.html" target="_blank">Política de Privacidade</a></span>
                             </label>
+                            <span class="field-error" id="error-privacy"></span>
                         </div>
                         
                         <div class="btn-group">
                             <button type="button" class="btn-back" onclick="prevQuestion(3)">← Voltar</button>
-                            <button type="button" class="btn-next" onclick="nextQuestion(5)">Próxima</button>
+                            <button type="button" class="btn-next" onclick="validateAndNext()">Próxima</button>
                         </div>
                     </div>
 
