@@ -244,6 +244,20 @@
                             </div>
                             <p class="privacy-note">🔒 Privado. Nunca compartilhado.</p>
                         </div>
+                        
+                        <!-- Opt-in Section -->
+                        <div class="opt-in-section">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="accept_newsletter" id="accept_newsletter" required>
+                                <span class="checkbox-text">Aceito receber a newsletter diária "Pro dia nascer Feliz" no meu email</span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="accept_privacy" id="accept_privacy" required>
+                                <span class="checkbox-text">Li e concordo com a <a href="privacidade.html" target="_blank">Política de Privacidade</a></span>
+                            </label>
+                        </div>
+                        
                         <div class="btn-group">
                             <button type="button" class="btn-back" onclick="prevQuestion(3)">← Voltar</button>
                             <button type="button" class="btn-next" onclick="nextQuestion(5)">Próxima</button>
@@ -272,23 +286,9 @@
                                 <span class="option-text">Tudo misturado</span>
                             </label>
                         </div>
-                        
-                        <!-- Opt-in Section -->
-                        <div class="opt-in-section">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="accept_newsletter" id="accept_newsletter" required>
-                                <span class="checkbox-text">Aceito receber a newsletter diária "Pro dia nascer Feliz" no meu email</span>
-                            </label>
-                            
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="accept_privacy" id="accept_privacy" required>
-                                <span class="checkbox-text">Li e concordo com a <a href="privacidade.html" target="_blank">Política de Privacidade</a></span>
-                            </label>
-                        </div>
-                        
                         <div class="btn-group">
                             <button type="button" class="btn-back" onclick="prevQuestion(4)">← Voltar</button>
-                            <button type="submit" class="btn-submit">Tá dentro →</button>
+                            <button type="submit" class="btn-submit">Inscrever</button>
                         </div>
                     </div>
                 </form>
@@ -296,7 +296,7 @@
                 <!-- Success -->
                 <div id="success-message" class="success-message" style="display: none;">
                     <div class="success-icon">✓</div>
-                    <h2 class="success-title">Bem-vindo</h2>
+                    <h2 class="success-title">Você tá dentro!</h2>
                     <p id="result-text" class="success-text"></p>
                     <p class="success-info">Amanhã, 8h30, no seu email.</p>
                 </div>
@@ -305,7 +305,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>© 2026 — <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
         </footer>
     </div>
 
