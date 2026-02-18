@@ -308,10 +308,10 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
         city: document.querySelector('input[name="city"]').value,
         birthdate: document.querySelector('input[name="birthdate"]').value,
         birthtime: document.querySelector('input[name="birthtime"]').value,
-        q1: document.querySelector('input[name="q1"]:checked').value,
-        q2: document.querySelector('input[name="q2"]:checked').value,
+        q1: Array.from(document.querySelectorAll('input[name="q1[]"]:checked')).map(cb => cb.value).join(', '),
+        q2: Array.from(document.querySelectorAll('input[name="q2[]"]:checked')).map(cb => cb.value).join(', '),
         q3: Array.from(document.querySelectorAll('input[name="q3[]"]:checked')).map(cb => cb.value).join(', '),
-        interest: document.querySelector('input[name="interest"]:checked').value
+        interest: Array.from(document.querySelectorAll('input[name="interest[]"]:checked')).map(cb => cb.value).join(', ')
     };
     
     // Calculate zodiac info
@@ -367,12 +367,13 @@ function showSuccess(data, zodiac, ascendant) {
         'career': 'Carreira e produtividade',
         'lifestyle': 'Lifestyle e bem-estar',
         'tech': 'Tech e inovação',
-        'culture': 'Cultura e entretenamento',
+        'culture': 'Cultura e entretenimento',
         'all': 'Tudo misturado'
     };
     
-    if (data.interest && interestMap[data.interest]) {
-        message += `<br><br>Você se interessa por: <strong>${interestMap[data.interest]}</strong>`;
+    if (data.interest) {
+        const interests = data.interest.split(', ').map(i => interestMap[i] || i).join(', ');
+        message += `<br><br>Você se interessa por: <strong>${interests}</strong>`;
     }
     
     // Add persona profile (without name)
