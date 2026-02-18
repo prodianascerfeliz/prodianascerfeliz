@@ -531,19 +531,142 @@ input.input-error {
 .success-title {
     font-size: 48px;
     font-weight: 900;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
     letter-spacing: -0.02em;
 }
 
-.success-text {
-    font-size: 20px;
-    margin-bottom: 16px;
+/* Persona Card */
+.persona-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #FAFAFA;
+    border: 2px solid #000;
+    padding: 50px 40px;
+    text-align: center;
 }
 
-.success-info {
+.persona-avatar {
+    font-size: 120px;
+    margin-bottom: 30px;
+    line-height: 1;
+}
+
+.persona-greeting {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--black);
+}
+
+.persona-type {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--sunrise-start);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.persona-zodiac {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.persona-zodiac .rarity {
+    font-size: 14px;
+    color: #999;
+    font-style: italic;
+    display: block;
+    margin-top: 8px;
+}
+
+.persona-divider {
+    height: 2px;
+    background: #000;
+    margin: 30px 0;
+}
+
+.persona-details {
+    text-align: left;
+    padding: 0 20px;
+}
+
+.persona-detail-section {
+    margin-bottom: 28px;
+}
+
+.persona-detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.detail-icon {
+    display: inline-block;
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.detail-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.detail-content {
     font-size: 18px;
+    line-height: 1.6;
+    color: var(--black);
+}
+
+.detail-content strong {
     font-weight: 700;
     color: var(--sunrise-start);
+}
+
+.persona-cta {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+.cta-text {
+    font-size: 20px;
+    color: var(--black);
+    margin-bottom: 8px;
+}
+
+.cta-subtext {
+    font-size: 16px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .persona-card {
+        padding: 40px 24px;
+    }
+    
+    .persona-avatar {
+        font-size: 100px;
+    }
+    
+    .persona-greeting {
+        font-size: 24px;
+    }
+    
+    .persona-type {
+        font-size: 26px;
+    }
+    
+    .persona-zodiac {
+        font-size: 18px;
+    }
+    
+    .detail-content {
+        font-size: 16px;
+    }
 }
 
 /* ================================

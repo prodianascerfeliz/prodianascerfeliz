@@ -353,16 +353,43 @@ function showSuccess(data, zodiac, ascendant) {
     document.getElementById('quiz-form').style.display = 'none';
     
     const successMessage = document.getElementById('success-message');
-    const resultText = document.getElementById('result-text');
     
-    // Build full profile message
-    let message = `Olá, ${data.name}! Você é ${zodiac.emoji} ${zodiac.sign}`;
+    // Persona emoji mapping
+    const personaEmojis = {
+        'Workaholic Conectada': '🐕',        // Golden Retriever
+        'Líder Antenado': '💼',              // Briefcase
+        'Sábia Sofisticada': '📚',           // Books
+        'Workaholic Equilibrista': '🏄',     // Surf
+        'Mãe Executiva': '🐙',               // Octopus
+        'Jovem Ansioso': '⚡',                // Lightning
+        'Gourmet Cult': '🍷'                 // Wine
+    };
+    
+    // Get persona emoji
+    const personaEmoji = personaEmojis[data.persona] || '⭐';
+    
+    // Populate avatar
+    document.getElementById('persona-avatar').textContent = personaEmoji;
+    
+    // Populate greeting
+    const firstName = data.name.split(' ')[0];
+    document.getElementById('persona-greeting').innerHTML = `Olá, <strong>${firstName}!</strong>`;
+    
+    // Populate persona type
+    document.getElementById('persona-type').textContent = `Você é ${data.persona}`;
+    
+    // Build zodiac text with rarity
+    let zodiacText = `${zodiac.emoji} ${zodiac.sign}`;
     if (ascendant) {
-        message += ` com ascendente em ${ascendant.emoji} ${ascendant.sign}`;
+        zodiacText += ` com ascendente em ${ascendant.emoji} ${ascendant.sign}`;
+        zodiacText += `<span class="rarity">(sua combinação é rara — só 8% da população tem isso!)</span>`;
     }
-    message += `.`;
+    document.getElementById('persona-zodiac').innerHTML = zodiacText;
     
-    // Add interests info
+    // Build details sections
+    let detailsHTML = '';
+    
+    // Interests
     const interestMap = {
         'career': 'Carreira e produtividade',
         'lifestyle': 'Lifestyle e bem-estar',
@@ -372,23 +399,93 @@ function showSuccess(data, zodiac, ascendant) {
     };
     
     if (data.interest) {
-        const interests = data.interest.split(', ').map(i => interestMap[i] || i).join(', ');
-        message += `<br><br>Você se interessa por: <strong>${interests}</strong>`;
+        const interests = data.interest.split(', ').map(i => interestMap[i] || i);
+        const interestsList = interests.map(i => `<strong>${i}</strong>`).join('<br>• ');
+        detailsHTML += `
+            <div class="persona-detail-section">
+                <div class="detail-title"><span class="detail-icon">🎯</span> Seus interesses:</div>
+                <div class="detail-content">• ${interestsList}</div>
+            </div>
+        `;
     }
     
-    // Add persona profile (without name)
-    if (data.persona) {
-        message += `<br>Perfil: <strong>${data.persona}</strong>`;
+    // Q1 - Como você começa o dia
+    const q1Map = {
+        'instagram': 'scrollando Instagram na cama',
+        'news': 'lendo notícias',
+        'coffee': 'tomando café em silêncio',
+        'rush': 'já atrasado'
+    };
+    if (data.q1) {
+        const q1Items = data.q1.split(', ').map(i => q1Map[i] || i);
+        const q1Text = formatList(q1Items);
+        detailsHTML += `
+            <div class="persona-detail-section">
+                <div class="detail-title"><span class="detail-icon">⚡</span> Como você é:</div>
+                <div class="detail-content">${q1Text}</div>
+            </div>
+        `;
     }
     
-    resultText.innerHTML = message;
+    // Q2 - Guilty pleasure
+    const q2Map = {
+        'conspiracy': 'teorias da conspiração',
+        'gossip': 'fofoca de celebridade',
+        'horoscope': 'horóscopo e astrologia',
+        'trends': 'trends & memes'
+    };
+    if (data.q2) {
+        const q2Items = data.q2.split(', ').map(i => q2Map[i] || i);
+        const q2Text = formatList(q2Items);
+        detailsHTML += `
+            <div class="persona-detail-section">
+                <div class="detail-title"><span class="detail-icon">💭</span> Seu guilty pleasure:</div>
+                <div class="detail-content">${q2Text}</div>
+            </div>
+        `;
+    }
+    
+    // Q3 - No grupo
+    const q3Map = {
+        'facts': 'manda os fatos',
+        'memes': 'manda os memes',
+        'listener': 'é quem mais ouve',
+        'organizer': 'organiza os rolês'
+    };
+    if (data.q3) {
+        const q3Items = data.q3.split(', ').map(i => q3Map[i] || i);
+        const q3Text = formatList(q3Items, true); // true = add personality comment
+        detailsHTML += `
+            <div class="persona-detail-section">
+                <div class="detail-title"><span class="detail-icon">🌟</span> No grupo, você:</div>
+                <div class="detail-content">${q3Text}</div>
+            </div>
+        `;
+    }
+    
+    document.getElementById('persona-details').innerHTML = detailsHTML;
+    
     successMessage.style.display = 'block';
     
-    // Scroll to success message instead of top
+    // Scroll to success message
     setTimeout(() => {
         const offset = successMessage.offsetTop - 100;
         window.scrollTo({ top: offset, behavior: 'smooth' });
     }, 100);
+}
+
+// Helper function to format lists naturally
+function formatList(items, addComment = false) {
+    if (items.length === 1) {
+        return items[0];
+    } else if (items.length === 2) {
+        const text = items.join(' e ');
+        return addComment ? text + ' <em>(multitasking é seu sobrenome!)</em>' : text;
+    } else {
+        const last = items.pop();
+        const text = items.join(', ') + ' e ' + last;
+        return addComment ? text + ' <em>(a pessoa que faz acontecer!)</em>' : text;
+    }
 }
 
 // Send to Google Sheets via Apps Script Web App
