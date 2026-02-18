@@ -282,17 +282,139 @@ function calculateAge(birthdate) {
 }
 
 // Determine Persona
+// ========================================
+// MATRIZ INTELIGENTE DE PERSONAS
+// Gerada por análise psicográfica profunda
+// ========================================
+
+const PERSONA_SCORING = {
+  MARINA: {
+    name: 'Workaholic Conectada',
+    age_weights: { "18-28": 0, "29-39": 2, "40-49": 1, "50+": 0 },
+    q1: { instagram: 3, news: 1, coffee: 2, rush: 2 },
+    q2: { conspiracy: 1, gossip: 2, horoscope: 3, trends: 3 },
+    q3: { facts: 2, memes: 3, listener: 2, organizer: 1 },
+    interest: { career: 2, lifestyle: 3, tech: 1, culture: 2, all: 2 }
+  },
+  PEDRO: {
+    name: 'Líder Antenado',
+    age_weights: { "18-28": 0, "29-39": 2, "40-49": 1, "50+": 0 },
+    q1: { instagram: 0, news: 3, coffee: 2, rush: 1 },
+    q2: { conspiracy: 1, gossip: 0, horoscope: 0, trends: 2 },
+    q3: { facts: 3, memes: 1, listener: 1, organizer: 3 },
+    interest: { career: 3, lifestyle: 1, tech: 2, culture: 1, all: 0 }
+  },
+  CAROLINA: {
+    name: 'Sábia Sofisticada',
+    age_weights: { "18-28": 0, "29-39": 0, "40-49": 2, "50+": 3 },
+    q1: { instagram: 0, news: 2, coffee: 3, rush: 0 },
+    q2: { conspiracy: 2, gossip: 1, horoscope: 2, trends: 1 },
+    q3: { facts: 2, memes: 0, listener: 3, organizer: 2 },
+    interest: { career: 2, lifestyle: 2, tech: 1, culture: 3, all: 1 }
+  },
+  FELIPE: {
+    name: 'Workaholic Equilibrista',
+    age_weights: { "18-28": 0, "29-39": 2, "40-49": 1, "50+": 0 },
+    q1: { instagram: 1, news: 2, coffee: 2, rush: 2 },
+    q2: { conspiracy: 1, gossip: 1, horoscope: 2, trends: 2 },
+    q3: { facts: 2, memes: 2, listener: 2, organizer: 2 },
+    interest: { career: 2, lifestyle: 3, tech: 1, culture: 2, all: 2 }
+  },
+  JULIA: {
+    name: 'Mãe Executiva',
+    age_weights: { "18-28": 0, "29-39": 2, "40-49": 1, "50+": 0 },
+    q1: { instagram: 2, news: 1, coffee: 1, rush: 3 },
+    q2: { conspiracy: 0, gossip: 2, horoscope: 2, trends: 2 },
+    q3: { facts: 1, memes: 2, listener: 2, organizer: 3 },
+    interest: { career: 2, lifestyle: 2, tech: 1, culture: 1, all: 3 }
+  },
+  THIAGO: {
+    name: 'Jovem Ansioso',
+    age_weights: { "18-28": 3, "29-39": 1, "40-49": 0, "50+": 0 },
+    q1: { instagram: 3, news: 2, coffee: 0, rush: 3 },
+    q2: { conspiracy: 2, gossip: 2, horoscope: 1, trends: 3 },
+    q3: { facts: 2, memes: 3, listener: 0, organizer: 2 },
+    interest: { career: 3, lifestyle: 1, tech: 2, culture: 1, all: 2 }
+  },
+  HENRIQUE: {
+    name: 'Gourmet Cult',
+    age_weights: { "18-28": 0, "29-39": 1, "40-49": 2, "50+": 1 },
+    q1: { instagram: 1, news: 2, coffee: 3, rush: 0 },
+    q2: { conspiracy: 2, gossip: 3, horoscope: 0, trends: 2 },
+    q3: { facts: 2, memes: 1, listener: 2, organizer: 2 },
+    interest: { career: 0, lifestyle: 2, tech: 1, culture: 3, all: 1 }
+  }
+};
+
 function determinePersona(formData) {
-    const age = calculateAge(formData.birthdate);
+  const scores = {};
+  
+  // Determinar faixa etária
+  const age = calculateAge(formData.birthdate);
+  let ageGroup;
+  if (age < 29) ageGroup = "18-28";
+  else if (age < 40) ageGroup = "29-39";
+  else if (age < 50) ageGroup = "40-49";
+  else ageGroup = "50+";
+  
+  // Calcular score para cada persona
+  for (const [personaKey, weights] of Object.entries(PERSONA_SCORING)) {
+    let score = 0;
     
-    // Simplified persona logic - returns only profile
-    if (age >= 45) {
-        return 'Sábia Sofisticada';
-    } else if (formData.q1 === 'news' || formData.interest === 'career') {
-        return 'Líder Antenado';
-    } else {
-        return 'Workaholic Conectada';
+    // Peso da idade (muito importante!)
+    score += weights.age_weights[ageGroup] * 3;
+    
+    // Q1 - Múltiplas respostas
+    if (formData.q1) {
+      const q1Answers = formData.q1.split(', ');
+      q1Answers.forEach(answer => {
+        score += weights.q1[answer] || 0;
+      });
     }
+    
+    // Q2 - Múltiplas respostas
+    if (formData.q2) {
+      const q2Answers = formData.q2.split(', ');
+      q2Answers.forEach(answer => {
+        score += weights.q2[answer] || 0;
+      });
+    }
+    
+    // Q3 - Múltiplas respostas
+    if (formData.q3) {
+      const q3Answers = formData.q3.split(', ');
+      q3Answers.forEach(answer => {
+        score += weights.q3[answer] || 0;
+      });
+    }
+    
+    // Interest - Múltiplas respostas
+    if (formData.interest) {
+      const interests = formData.interest.split(', ');
+      interests.forEach(interest => {
+        score += weights.interest[interest] || 0;
+      });
+    }
+    
+    scores[personaKey] = score;
+  }
+  
+  // Encontrar persona com maior score
+  let bestPersona = 'MARINA';
+  let bestScore = 0;
+  
+  for (const [persona, score] of Object.entries(scores)) {
+    if (score > bestScore) {
+      bestScore = score;
+      bestPersona = persona;
+    }
+  }
+  
+  // Debug log (remover em produção se quiser)
+  console.log('🎯 Persona Scores:', scores);
+  console.log('✅ Melhor match:', bestPersona, 'com score', bestScore);
+  
+  return PERSONA_SCORING[bestPersona].name;
 }
 
 // Form Submission
