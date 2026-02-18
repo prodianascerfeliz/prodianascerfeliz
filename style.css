@@ -551,6 +551,14 @@ input.input-error {
     line-height: 1;
 }
 
+.persona-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
 .persona-greeting {
     font-size: 28px;
     font-weight: 700;

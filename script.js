@@ -354,22 +354,23 @@ function showSuccess(data, zodiac, ascendant) {
     
     const successMessage = document.getElementById('success-message');
     
-    // Persona emoji mapping
-    const personaEmojis = {
-        'Workaholic Conectada': '🐕',        // Golden Retriever
-        'Líder Antenado': '💼',              // Briefcase
-        'Sábia Sofisticada': '📚',           // Books
-        'Workaholic Equilibrista': '🏄',     // Surf
-        'Mãe Executiva': '🐙',               // Octopus
-        'Jovem Ansioso': '⚡',                // Lightning
-        'Gourmet Cult': '🍷'                 // Wine
+    // Persona image mapping
+    const personaImages = {
+        'Workaholic Conectada': 'marina.png',
+        'Líder Antenado': 'pedro.png',
+        'Sábia Sofisticada': 'carolina.png',
+        'Workaholic Equilibrista': 'felipe.png',
+        'Mãe Executiva': 'julia.png',
+        'Jovem Ansioso': 'thiago.png',
+        'Gourmet Cult': 'henrique.png'
     };
     
-    // Get persona emoji
-    const personaEmoji = personaEmojis[data.persona] || '⭐';
+    // Get persona image
+    const personaImage = personaImages[data.persona] || 'marina.png';
     
-    // Populate avatar
-    document.getElementById('persona-avatar').textContent = personaEmoji;
+    // Populate avatar with image
+    const avatarEl = document.getElementById('persona-avatar');
+    avatarEl.innerHTML = `<img src="images/personas/${personaImage}" alt="${data.persona}" class="persona-image">`;
     
     // Populate greeting
     const firstName = data.name.split(' ')[0];
