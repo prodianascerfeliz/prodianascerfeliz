@@ -1,3 +1,9 @@
+// User coordinates (from CEP lookup)
+let userCoordinates = {
+    latitude: null,
+    longitude: null
+};
+
 // Scroll to Quiz from Hero CTA
 function scrollToQuiz() {
     const ctaSection = document.querySelector('.cta-section');
@@ -164,8 +170,35 @@ async function searchCEP(cep) {
         const cityInput = document.getElementById('city');
         cityInput.value = `${data.localidade} - ${data.uf}`;
         
+        // Fetch coordinates for this city
+        await fetchCityCoordinates(data.localidade, data.uf);
+        
     } catch (error) {
         console.error('Erro ao buscar CEP:', error);
+    }
+}
+
+// Fetch city coordinates from OpenStreetMap
+async function fetchCityCoordinates(city, state) {
+    try {
+        const query = encodeURIComponent(`${city}, ${state}, Brazil`);
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            userCoordinates.latitude = parseFloat(data[0].lat);
+            userCoordinates.longitude = parseFloat(data[0].lon);
+            console.log('📍 Coordenadas obtidas:', userCoordinates);
+        } else {
+            // Fallback: São Paulo
+            userCoordinates.latitude = -23.5505;
+            userCoordinates.longitude = -46.6333;
+            console.log('⚠️ Usando coordenadas de São Paulo como fallback');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar coordenadas:', error);
+        userCoordinates.latitude = -23.5505;
+        userCoordinates.longitude = -46.6333;
     }
 }
 
@@ -237,8 +270,81 @@ function getZodiacSign(day, month) {
     return { sign: 'Capricórnio', emoji: '♑' };
 }
 
-// Ascendant Calculator (simplified - based on birth time)
-function getAscendant(birthTime) {
+// ========================================
+// CÁLCULO PRECISO DE ASCENDENTE
+// ========================================
+
+function calcularAscendentePreciso(birthdate, birthtime, latitude, longitude) {
+    try {
+        const [year, month, day] = birthdate.split('-').map(Number);
+        const [hour, minute] = birthtime.split(':').map(Number);
+        
+        // Calcula Tempo Sideral Local
+        const tsl = calcularTempoSideralLocal(year, month, day, hour, minute, longitude);
+        const tslGraus = (tsl * 15) % 360;
+        
+        // Calcula ascendente
+        const ascendente = calcularAscendenteFromTSL(tslGraus, latitude);
+        
+        return {
+            sign: ascendente.sign,
+            emoji: ascendente.emoji,
+            method: 'calculated'
+        };
+    } catch (error) {
+        console.error('Erro no cálculo:', error);
+        return null;
+    }
+}
+
+function calcularTempoSideralLocal(year, month, day, hour, minute, longitude) {
+    const jd = calcularDataJuliana(year, month, day, hour, minute);
+    const t = (jd - 2451545.0) / 36525;
+    let tsg = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + t * t * (0.000387933 - t / 38710000);
+    tsg = tsg % 360;
+    if (tsg < 0) tsg += 360;
+    const tsl = tsg + longitude;
+    return (tsl / 15) % 24;
+}
+
+function calcularDataJuliana(year, month, day, hour, minute) {
+    const hourDecimal = hour + (minute / 60);
+    let y = year, m = month;
+    if (m <= 2) { y -= 1; m += 12; }
+    const a = Math.floor(y / 100);
+    const b = 2 - a + Math.floor(a / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524.5 + (hourDecimal / 24);
+}
+
+function calcularAscendenteFromTSL(tslGraus, latitude) {
+    const signos = [
+        { sign: 'Áries', emoji: '♈', start: 0, end: 30 },
+        { sign: 'Touro', emoji: '♉', start: 30, end: 60 },
+        { sign: 'Gêmeos', emoji: '♊', start: 60, end: 90 },
+        { sign: 'Câncer', emoji: '♋', start: 90, end: 120 },
+        { sign: 'Leão', emoji: '♌', start: 120, end: 150 },
+        { sign: 'Virgem', emoji: '♍', start: 150, end: 180 },
+        { sign: 'Libra', emoji: '♎', start: 180, end: 210 },
+        { sign: 'Escorpião', emoji: '♏', start: 210, end: 240 },
+        { sign: 'Sagitário', emoji: '♐', start: 240, end: 270 },
+        { sign: 'Capricórnio', emoji: '♑', start: 270, end: 300 },
+        { sign: 'Aquário', emoji: '♒', start: 300, end: 330 },
+        { sign: 'Peixes', emoji: '♓', start: 330, end: 360 }
+    ];
+    
+    const latitudeAdjustment = Math.abs(latitude) / 90 * 15;
+    const adjustedTSL = (tslGraus + latitudeAdjustment) % 360;
+    
+    for (let signo of signos) {
+        if (adjustedTSL >= signo.start && adjustedTSL < signo.end) {
+            return signo;
+        }
+    }
+    return signos[0];
+}
+
+// Ascendant Calculator (simplified - fallback)
+function getAscendantSimple(birthTime) {
     if (!birthTime) return null;
     
     const [hours, minutes] = birthTime.split(':').map(Number);
@@ -265,6 +371,16 @@ function getAscendant(birthTime) {
         }
     }
     return { sign: 'Áries', emoji: '♈' };
+}
+
+// Get Emoji for Sign Name
+function getEmojiForSign(signName) {
+    const emojiMap = {
+        'Áries': '♈', 'Touro': '♉', 'Gêmeos': '♊', 'Câncer': '♋',
+        'Leão': '♌', 'Virgem': '♍', 'Libra': '♎', 'Escorpião': '♏',
+        'Sagitário': '♐', 'Capricórnio': '♑', 'Aquário': '♒', 'Peixes': '♓'
+    };
+    return emojiMap[signName] || '⭐';
 }
 
 // Calculate Age
@@ -430,6 +546,7 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
         city: document.querySelector('input[name="city"]').value,
         birthdate: document.querySelector('input[name="birthdate"]').value,
         birthtime: document.querySelector('input[name="birthtime"]').value,
+        ascendente_manual: document.querySelector('select[name="ascendente_manual"]').value,
         q1: Array.from(document.querySelectorAll('input[name="q1[]"]:checked')).map(cb => cb.value).join(', '),
         q2: Array.from(document.querySelectorAll('input[name="q2[]"]:checked')).map(cb => cb.value).join(', '),
         q3: Array.from(document.querySelectorAll('input[name="q3[]"]:checked')).map(cb => cb.value).join(', '),
@@ -439,7 +556,37 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
     // Calculate zodiac info
     const birthDate = new Date(formData.birthdate);
     const zodiac = getZodiacSign(birthDate.getDate(), birthDate.getMonth() + 1);
-    const ascendant = getAscendant(formData.birthtime);
+    
+    // Ascendant: usa manual se informado, senão calcula
+    let ascendant;
+    if (formData.ascendente_manual) {
+        // Usuário informou manualmente - usa esse!
+        const emoji = getEmojiForSign(formData.ascendente_manual);
+        ascendant = { sign: formData.ascendente_manual, emoji: emoji, method: 'manual' };
+    } else if (formData.birthtime && userCoordinates.latitude) {
+        // Calcula com precisão (tem hora + coordenadas)
+        console.log('🔭 Calculando ascendente preciso...');
+        ascendant = calcularAscendentePreciso(
+            formData.birthdate,
+            formData.birthtime,
+            userCoordinates.latitude,
+            userCoordinates.longitude
+        );
+        
+        // Se o cálculo preciso falhar, usa simplificado
+        if (!ascendant) {
+            console.log('⚠️ Fallback para cálculo simplificado');
+            ascendant = getAscendantSimple(formData.birthtime);
+        }
+    } else if (formData.birthtime) {
+        // Tem hora mas não tem coordenadas - usa aproximado
+        console.log('⚠️ Cálculo aproximado (sem coordenadas)');
+        ascendant = getAscendantSimple(formData.birthtime);
+    } else {
+        // Sem hora de nascimento
+        ascendant = null;
+    }
+    
     const age = calculateAge(formData.birthdate);
     const persona = determinePersona(formData);
     
