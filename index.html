@@ -253,10 +253,14 @@
                             <input type="text" name="city" id="city" placeholder="Cidade" readonly style="background: #f5f5f5;">
                             <div class="field-group">
                                 <div class="field-wrapper">
-                                    <input type="date" name="birthdate" id="field-birthdate" placeholder="Nascimento" required>
+                                    <label for="field-birthdate" style="display:block;font-size:14px;font-weight:600;color:#333;margin-bottom:8px;">Data de Nascimento</label>
+                                    <input type="date" name="birthdate" id="field-birthdate" required>
                                     <span class="field-error" id="error-birthdate"></span>
                                 </div>
-                                <input type="time" name="birthtime" placeholder="Hora (opcional)">
+                                <div class="field-wrapper">
+                                    <label for="birthtime" style="display:block;font-size:14px;font-weight:600;color:#333;margin-bottom:8px;">Hora de Nascimento (opcional)</label>
+                                    <input type="time" name="birthtime" id="birthtime">
+                                </div>
                             </div>
                             <p class="privacy-note">🔒 Privado. Nunca compartilhado.</p>
                         </div>
