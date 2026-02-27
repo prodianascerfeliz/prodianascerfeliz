@@ -608,6 +608,14 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
         // Enviar para Google Sheets via sua API
         await sendToGoogleSheets(submitData);
         
+        // ========================================
+        // AUTENTICAÇÃO PARA ARQUIVO DE EDIÇÕES
+        // Salva email no navegador para acesso às edições
+        // ========================================
+        localStorage.setItem('user_email', formData.email);
+        localStorage.setItem('auth_token', 'auth_' + Date.now());
+        console.log('✅ Autenticação salva para acesso às edições');
+        
         // Show success message
         showSuccess(submitData, zodiac, ascendant);
         
