@@ -144,9 +144,78 @@
                 font-size: 28px;
             }
         }
+
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            animation: fadeInOverlay 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .loading-content {
+            text-align: center;
+            color: #fff;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #FFD93D;
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            animation: spinLoader 1s linear infinite;
+        }
+
+        @keyframes spinLoader {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
+    
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Calculando seu mapa astral...</div>
+            <div class="loading-subtext">Isso pode levar alguns segundos ✨</div>
+        </div>
+    </div>
     <div class="sun-container">
         <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -571,6 +640,51 @@
         })();
     </script>
 
+    <script>
+// ========================================
+// LOADING OVERLAY FUNCTIONS
+// ========================================
+
+function showLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.add('active');
+    }
+    
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+    }
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Inscrever';
+    }
+}
+
+// Hook into form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const quizForm = document.getElementById('quiz-form');
+    if (quizForm) {
+        quizForm.addEventListener('submit', function(e) {
+            // Show loading immediately when form is submitted
+            showLoading();
+            
+            // The hideLoading() will be called by script.js when submission completes
+        });
+    }
+});
+    </script>
+
 <script>
 // ========================================
 // DETECÇÃO DE GÊNERO E AJUSTE DE PERSONA
@@ -639,6 +753,35 @@ window.ajustarPersonaPorGenero = function(nomeUsuario, textoPersona) {
     const genero = detectarGenero(nomeUsuario);
     return ajustarTextoPersona(textoPersona, genero);
 };
+
+/*
+========================================
+IMPORTANTE - INSTRUÇÕES PARA O SCRIPT.JS
+========================================
+
+Para fazer o loading funcionar completamente, adicione hideLoading() no seu script.js:
+
+1. Encontre onde o formulário é processado após submit
+2. Adicione hideLoading() quando o processamento terminar
+
+EXEMPLO:
+
+// No seu script.js, onde processa o submit:
+fetch(url, options)
+    .then(response => response.json())
+    .then(data => {
+        hideLoading(); // ← ADICIONA AQUI quando der sucesso
+        // Mostra mensagem de sucesso
+        document.getElementById('success-message').style.display = 'block';
+    })
+    .catch(error => {
+        hideLoading(); // ← ADICIONA AQUI quando der erro
+        // Mostra mensagem de erro
+        alert('Erro ao enviar');
+    });
+
+As funções showLoading() e hideLoading() já estão disponíveis globalmente!
+*/
 </script>
 </body>
 </html>
