@@ -675,11 +675,50 @@ function hideLoading() {
 document.addEventListener('DOMContentLoaded', function() {
     const quizForm = document.getElementById('quiz-form');
     if (quizForm) {
-        quizForm.addEventListener('submit', function(e) {
-            // Show loading immediately when form is submitted
+        // Remove qualquer listener antigo
+        const newForm = quizForm.cloneNode(true);
+        quizForm.parentNode.replaceChild(newForm, quizForm);
+        
+        newForm.addEventListener('submit', function(e) {
+            // Não previne o default - deixa o script.js processar
+            
+            // Show loading
             showLoading();
             
-            // The hideLoading() will be called by script.js when submission completes
+            // Safety timeout: esconde loading após 10 segundos se nada acontecer
+            setTimeout(function() {
+                const successMsg = document.getElementById('success-message');
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                
+                // Se a mensagem de sucesso apareceu OU passou 10s, esconde loading
+                if (successMsg && successMsg.style.display !== 'none') {
+                    hideLoading();
+                } else if (loadingOverlay && loadingOverlay.classList.contains('active')) {
+                    // Força esconder após 10s
+                    hideLoading();
+                }
+            }, 10000);
+            
+            // Observer: detecta quando mensagem de sucesso aparece
+            const successObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.id === 'success-message') {
+                        const display = window.getComputedStyle(mutation.target).display;
+                        if (display !== 'none') {
+                            hideLoading();
+                            successObserver.disconnect();
+                        }
+                    }
+                });
+            });
+            
+            const successElement = document.getElementById('success-message');
+            if (successElement) {
+                successObserver.observe(successElement, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            }
         });
     }
 });
