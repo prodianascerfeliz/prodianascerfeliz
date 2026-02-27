@@ -145,7 +145,7 @@
             }
         }
 
-        /* LOADING OVERLAY */
+        /* LOADING OVERLAY - Adicionado */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -207,8 +207,7 @@
     </style>
 </head>
 <body>
-    
-    <!-- LOADING OVERLAY -->
+    <!-- LOADING OVERLAY - Adicionado -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
@@ -216,6 +215,7 @@
             <div class="loading-subtext">Isso pode levar alguns segundos ✨</div>
         </div>
     </div>
+    
     <div class="sun-container">
         <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -640,90 +640,6 @@
         })();
     </script>
 
-    <script>
-// ========================================
-// LOADING OVERLAY FUNCTIONS
-// ========================================
-
-function showLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        overlay.classList.add('active');
-    }
-    
-    const submitBtn = document.querySelector('.btn-submit');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-    }
-}
-
-function hideLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-    
-    const submitBtn = document.querySelector('.btn-submit');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Inscrever';
-    }
-}
-
-// Hook into form submission
-document.addEventListener('DOMContentLoaded', function() {
-    const quizForm = document.getElementById('quiz-form');
-    if (quizForm) {
-        // Remove qualquer listener antigo
-        const newForm = quizForm.cloneNode(true);
-        quizForm.parentNode.replaceChild(newForm, quizForm);
-        
-        newForm.addEventListener('submit', function(e) {
-            // Não previne o default - deixa o script.js processar
-            
-            // Show loading
-            showLoading();
-            
-            // Safety timeout: esconde loading após 10 segundos se nada acontecer
-            setTimeout(function() {
-                const successMsg = document.getElementById('success-message');
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                
-                // Se a mensagem de sucesso apareceu OU passou 10s, esconde loading
-                if (successMsg && successMsg.style.display !== 'none') {
-                    hideLoading();
-                } else if (loadingOverlay && loadingOverlay.classList.contains('active')) {
-                    // Força esconder após 10s
-                    hideLoading();
-                }
-            }, 10000);
-            
-            // Observer: detecta quando mensagem de sucesso aparece
-            const successObserver = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.target.id === 'success-message') {
-                        const display = window.getComputedStyle(mutation.target).display;
-                        if (display !== 'none') {
-                            hideLoading();
-                            successObserver.disconnect();
-                        }
-                    }
-                });
-            });
-            
-            const successElement = document.getElementById('success-message');
-            if (successElement) {
-                successObserver.observe(successElement, {
-                    attributes: true,
-                    attributeFilter: ['style']
-                });
-            }
-        });
-    }
-});
-    </script>
-
 <script>
 // ========================================
 // DETECÇÃO DE GÊNERO E AJUSTE DE PERSONA
@@ -792,35 +708,78 @@ window.ajustarPersonaPorGenero = function(nomeUsuario, textoPersona) {
     const genero = detectarGenero(nomeUsuario);
     return ajustarTextoPersona(textoPersona, genero);
 };
+</script>
 
-/*
-========================================
-IMPORTANTE - INSTRUÇÕES PARA O SCRIPT.JS
-========================================
+<script>
+// ========================================
+// LOADING OVERLAY - Simple and Safe
+// ========================================
 
-Para fazer o loading funcionar completamente, adicione hideLoading() no seu script.js:
+window.showLoading = function() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.classList.add('active');
+    
+    const btn = document.querySelector('.btn-submit');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+    }
+};
 
-1. Encontre onde o formulário é processado após submit
-2. Adicione hideLoading() quando o processamento terminar
+window.hideLoading = function() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.classList.remove('active');
+    
+    const btn = document.querySelector('.btn-submit');
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Inscrever';
+    }
+};
 
-EXEMPLO:
+// Detecta quando botão submit é clicado
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('btn-submit')) {
+        setTimeout(showLoading, 10);
+    }
+}, true);
 
-// No seu script.js, onde processa o submit:
-fetch(url, options)
-    .then(response => response.json())
-    .then(data => {
-        hideLoading(); // ← ADICIONA AQUI quando der sucesso
-        // Mostra mensagem de sucesso
-        document.getElementById('success-message').style.display = 'block';
-    })
-    .catch(error => {
-        hideLoading(); // ← ADICIONA AQUI quando der erro
-        // Mostra mensagem de erro
-        alert('Erro ao enviar');
-    });
+// Detecta quando mensagem de sucesso aparece e esconde loading
+const successObserver = new MutationObserver(function() {
+    const successMsg = document.getElementById('success-message');
+    if (successMsg && successMsg.style.display !== 'none' && 
+        window.getComputedStyle(successMsg).display !== 'none') {
+        setTimeout(hideLoading, 100);
+        successObserver.disconnect();
+    }
+});
 
-As funções showLoading() e hideLoading() já estão disponíveis globalmente!
-*/
+// Inicia observer quando DOM carregar
+setTimeout(function() {
+    const successMsg = document.getElementById('success-message');
+    if (successMsg) {
+        successObserver.observe(successMsg, {
+            attributes: true,
+            attributeFilter: ['style'],
+            childList: true,
+            subtree: true
+        });
+    }
+}, 1000);
+
+// Safety: esconde após 15 segundos se ainda estiver ativo
+setInterval(function() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay && overlay.classList.contains('active')) {
+        const activeTime = overlay.dataset.activeTime || 0;
+        overlay.dataset.activeTime = parseInt(activeTime) + 1;
+        
+        if (parseInt(activeTime) > 15) {
+            hideLoading();
+            overlay.dataset.activeTime = 0;
+        }
+    }
+}, 1000);
 </script>
 </body>
 </html>
