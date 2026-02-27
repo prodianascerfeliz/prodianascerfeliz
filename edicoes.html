@@ -3,260 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Arquivo completo de edições da newsletter Pro dia nascer Feliz">
     <title>Edições - Pro dia nascer Feliz</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 60px;
-        }
-
-        .logo {
-            font-size: 60px;
-            margin-bottom: 16px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .header h1 {
-            font-size: 42px;
-            font-weight: 900;
-            margin-bottom: 12px;
-        }
-
-        .header p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-
-        .user-status {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 16px 24px;
-            border-radius: 12px;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .user-status.logged-in {
-            background: rgba(16, 185, 129, 0.2);
-        }
-
-        .editions-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .edition-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-
-        .edition-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .edition-date {
-            font-size: 14px;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 12px;
-        }
-
-        .edition-title {
-            font-size: 24px;
-            font-weight: 900;
-            color: #1a1a1a;
-            margin-bottom: 12px;
-        }
-
-        .edition-preview {
-            color: #666;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .edition-topics {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .topic-tag {
-            padding: 6px 12px;
-            background: #f3f4f6;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #4b5563;
-        }
-
-        .lock-icon {
-            display: inline-block;
-            margin-left: 8px;
-            opacity: 0.5;
-        }
-
-        .cta-box {
-            background: #fff;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .cta-box h2 {
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 12px;
-        }
-
-        .cta-box p {
-            color: #666;
-            margin-bottom: 24px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 16px 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 700;
-            transition: transform 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .loading {
-            text-align: center;
-            color: #fff;
-            padding: 60px;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #fff;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">☀️</div>
-            <h1>Arquivo de Edições</h1>
-            <p>Todas as newsletters já enviadas</p>
-        </div>
+    <!-- Animated Sun Background -->
+    <div class="sun-container">
+        <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF6B35;#FFD23F;#FF6B35" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                    <stop offset="100%" style="stop-color:#FF8C61;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF8C61;#FFEB99;#FF8C61" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="60" fill="url(#sunGradient)">
+                <animate attributeName="r" values="60;65;60" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <g transform="translate(100, 100)">
+                <g class="rays">
+                    <line x1="0" y1="-80" x2="0" y2="-95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="56" y1="-56" x2="67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="80" y1="0" x2="95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="56" y1="56" x2="67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="0" y1="80" x2="0" y2="95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-56" y1="56" x2="-67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-80" y1="0" x2="-95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-56" y1="-56" x2="-67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <animateTransform 
+                        attributeName="transform" 
+                        attributeType="XML" 
+                        type="rotate" 
+                        from="0" 
+                        to="360" 
+                        dur="60s" 
+                        repeatCount="indefinite"/>
+                </g>
+            </g>
+        </svg>
+    </div>
 
-        <div class="user-status" id="userStatus">
-            Carregando...
-        </div>
+    <div class="page-wrapper">
+        <!-- Hero -->
+        <header class="hero">
+            <h1 class="title">
+                <span class="title-line">Arquivo de</span>
+                <span class="title-line accent">Edições</span>
+            </h1>
+            <p class="subtitle">Todas as newsletters já enviadas</p>
+            <a href="/" class="hero-cta" style="display:inline-block;text-decoration:none;">
+                ← Voltar para home
+            </a>
+        </header>
 
-        <div id="editionsContainer">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Carregando edições...</p>
-            </div>
-        </div>
+        <!-- Main Content -->
+        <main class="content">
+            <!-- User Status -->
+            <section class="section">
+                <div id="userStatus" style="text-align:center;padding:20px;background:rgba(255,255,255,0.1);border-radius:12px;margin-bottom:40px;">
+                    Carregando...
+                </div>
+            </section>
 
-        <div class="cta-box">
-            <h2>Quer receber todo dia?</h2>
-            <p>Cadastre-se grátis e receba a newsletter às 8h30</p>
-            <a href="/" class="btn">Quero me inscrever ☀️</a>
-        </div>
+            <!-- Editions List -->
+            <section class="section">
+                <div id="editionsContainer">
+                    <div style="text-align:center;padding:60px 20px;">
+                        <div style="width:50px;height:50px;border:4px solid rgba(255,255,255,0.2);border-top-color:#FF6B35;border-radius:50%;margin:0 auto 20px;animation:spin 1s linear infinite;"></div>
+                        <p style="color:#fff;">Carregando edições...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="section cta-section" style="display:block;">
+                <p class="cta-text">Curtiu? Receba todo dia no seu email</p>
+                <a href="/" class="cta-button" style="display:inline-block;text-decoration:none;">
+                    Quero me inscrever →
+                </a>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
+        </footer>
     </div>
 
     <script>
         // Configuração da API
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwhz4hBt1cAojHParJ5xuVs8JQdwaaYZOtVW3JO0YhMWkTG34wg4HUp754wEm2qOdZb/exec'; // 
+        const API_URL = 'https://script.google.com/macros/s/AKfycbykz3UvIyj3YBaJ2YaKdqNJLp-vu9gmmgbDcpEDTyNMPakG-Ox4x0wNr-IAYOQW23Yv/exec'; // ← URL da sua API
 
-        // Checa se usuário está logado
+        // Checa autenticação
         function checkAuth() {
             const token = localStorage.getItem('auth_token');
             const email = localStorage.getItem('user_email');
             
             if (token && email) {
                 document.getElementById('userStatus').innerHTML = `
-                    <span class="logged-in">✓ Logado como <strong>${email}</strong></span>
+                    <span style="color:#10b981;font-weight:600;">✓ Logado como <strong>${email}</strong></span>
                 `;
-                document.getElementById('userStatus').classList.add('logged-in');
                 return { logged: true, email, token };
             } else {
                 document.getElementById('userStatus').innerHTML = `
-                    <span>Você precisa estar cadastrado para ler as edições. <a href="/" style="color:#fff;text-decoration:underline;">Cadastre-se grátis</a></span>
+                    <span style="color:#fff;">🔒 Você precisa estar cadastrado para ler as edições. <a href="/" style="color:#FFD23F;text-decoration:underline;font-weight:600;">Cadastre-se grátis</a></span>
                 `;
                 return { logged: false };
             }
         }
 
-        // Carrega lista de edições
+        // Carrega edições
         async function loadEditions() {
             const auth = checkAuth();
             
             try {
-                // Por enquanto, mock de dados
-                // Quando tiver a API, substitui por:
-                // const response = await fetch(`${API_URL}?action=list`);
-                // const editions = await response.json();
+                const response = await fetch(`${API_URL}?action=list`);
+                const data = await response.json();
                 
-                const editions = generateMockEditions();
-                renderEditions(editions, auth.logged);
+                if (data.editions) {
+                    renderEditions(data.editions, auth.logged);
+                } else {
+                    // Fallback: gera mock
+                    const mockEditions = generateMockEditions();
+                    renderEditions(mockEditions, auth.logged);
+                }
                 
             } catch (error) {
-                document.getElementById('editionsContainer').innerHTML = `
-                    <div class="loading">
-                        <p style="color:#fff;">❌ Erro ao carregar edições</p>
-                    </div>
-                `;
+                console.error('Erro:', error);
+                const mockEditions = generateMockEditions();
+                renderEditions(mockEditions, auth.logged);
             }
         }
 
-        // Gera dados mock (substitui quando tiver API real)
+        // Mock de edições
         function generateMockEditions() {
             const editions = [];
             const today = new Date();
@@ -268,16 +156,16 @@
                 const dateStr = date.toISOString().split('T')[0];
                 const displayDate = date.toLocaleDateString('pt-BR', { 
                     day: 'numeric', 
-                    month: 'short',
+                    month: 'long',
                     year: 'numeric'
                 });
                 
                 editions.push({
                     date: dateStr,
                     displayDate: displayDate,
-                    title: i === 0 ? 'Edição de Hoje' : `Edição de ${displayDate}`,
+                    title: i === 0 ? 'Edição de Hoje' : `Edição de ${date.getDate()} de ${date.toLocaleDateString('pt-BR', {month: 'long'})}`,
                     preview: 'Thread sobre salários, viral do motoboy, bastidores de campanha...',
-                    topics: ['Viralizando', 'Conspiração', 'Bastidores', 'Clima']
+                    topics: ['Viralizando', 'Conspiração', 'Bastidores']
                 });
             }
             
@@ -288,27 +176,40 @@
         function renderEditions(editions, isLogged) {
             const container = document.getElementById('editionsContainer');
             
-            const html = editions.map(edition => `
-                <div class="edition-card" onclick="openEdition('${edition.date}', ${isLogged})">
-                    <div class="edition-date">${edition.displayDate}</div>
-                    <div class="edition-title">
-                        ${edition.title}
-                        ${!isLogged ? '<span class="lock-icon">🔒</span>' : ''}
+            const html = editions.map((edition, index) => `
+                <div class="value-card" onclick="openEdition('${edition.date}', ${isLogged})" style="cursor:pointer;transition:transform 0.2s;">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+                        <div class="card-emoji" style="font-size:32px;">${index === 0 ? '📰' : '📅'}</div>
+                        ${!isLogged ? '<span style="font-size:24px;opacity:0.3;">🔒</span>' : ''}
                     </div>
-                    <div class="edition-preview">${edition.preview}</div>
-                    <div class="edition-topics">
-                        ${edition.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
-                    </div>
+                    <h3 class="card-title">${edition.title}</h3>
+                    <p style="font-size:13px;color:#999;margin-bottom:12px;">${edition.displayDate}</p>
+                    <p class="card-desc">${edition.preview}</p>
+                    ${edition.topics ? `
+                        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+                            ${edition.topics.map(t => `<span style="padding:4px 12px;background:#f5f5f5;border-radius:6px;font-size:11px;font-weight:600;color:#666;">${t}</span>`).join('')}
+                        </div>
+                    ` : ''}
                 </div>
             `).join('');
             
-            container.innerHTML = `<div class="editions-grid">${html}</div>`;
+            container.innerHTML = `<div class="value-grid-new">${html}</div>`;
+            
+            // Adiciona hover effect
+            document.querySelectorAll('.value-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
         }
 
         // Abre edição
         function openEdition(date, isLogged) {
             if (!isLogged) {
-                alert('Você precisa estar cadastrado para ler as edições!\n\nCadastre-se grátis na página inicial.');
+                alert('🔒 Você precisa estar cadastrado para ler as edições!\n\nCadastre-se grátis na página inicial.');
                 window.location.href = '/';
                 return;
             }
@@ -317,8 +218,14 @@
             window.location.href = `/edicoes/${date}.html`;
         }
 
-        // Carrega ao abrir página
+        // Carrega ao abrir
         loadEditions();
     </script>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
