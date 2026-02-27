@@ -570,5 +570,75 @@
             }
         })();
     </script>
+
+<script>
+// ========================================
+// DETECÇÃO DE GÊNERO E AJUSTE DE PERSONA
+// ========================================
+
+const nomesMasculinos = [
+    'joão', 'josé', 'carlos', 'pedro', 'felipe', 'lucas', 'rafael', 'gabriel', 
+    'miguel', 'matheus', 'daniel', 'bruno', 'rodrigo', 'guilherme', 'eduardo',
+    'fernando', 'marcelo', 'ricardo', 'thiago', 'diego', 'vitor', 'henrique',
+    'leonardo', 'gustavo', 'andré', 'paulo', 'renan', 'vinícius', 'caio',
+    'arthur', 'bernardo', 'samuel', 'enzo', 'davi', 'heitor', 'theo', 'lorenzo',
+    'marcos', 'antonio', 'luis', 'sergio', 'roberto', 'alexandre', 'fábio',
+    'anderson', 'wellington', 'leandro', 'mauricio', 'renato', 'william'
+];
+
+const nomesFemininos = [
+    'maria', 'ana', 'juliana', 'fernanda', 'amanda', 'carolina', 'camila',
+    'mariana', 'jessica', 'patricia', 'aline', 'bruna', 'leticia', 'gabriela',
+    'rafaela', 'beatriz', 'larissa', 'natalia', 'vanessa', 'bianca', 'débora',
+    'priscila', 'tatiana', 'renata', 'carla', 'marina', 'julia', 'sofia',
+    'isabela', 'laura', 'valentina', 'alice', 'helena', 'manuela', 'giovanna',
+    'clara', 'nicole', 'vitória', 'lívia', 'luiza', 'melissa', 'sabrina',
+    'daniela','maite', 'adriana', 'sandra', 'paula', 'luciana', 'claudia', 'simone'
+];
+
+function detectarGenero(nome) {
+    if (!nome) return 'N';
+    
+    const primeiroNome = nome.trim().split(' ')[0].toLowerCase();
+    const nomeNormalizado = primeiroNome.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    if (nomesMasculinos.includes(nomeNormalizado)) return 'M';
+    if (nomesFemininos.includes(nomeNormalizado)) return 'F';
+    
+    // Heurísticas
+    if (nomeNormalizado.endsWith('a') && !nomeNormalizado.endsWith('oa')) return 'F';
+    if (nomeNormalizado.endsWith('o') && !nomeNormalizado.endsWith('ao')) return 'M';
+    
+    return 'N';
+}
+
+function ajustarTextoPersona(texto, genero) {
+    if (genero === 'N' || genero === 'F') return texto;
+    
+    // Ajustes para masculino
+    return texto
+        .replace(/Conectada/g, 'Conectado')
+        .replace(/conectada/g, 'conectado')
+        .replace(/Autêntica/g, 'Autêntico')
+        .replace(/autêntica/g, 'autêntico')
+        .replace(/Pragmática/g, 'Pragmático')
+        .replace(/pragmática/g, 'pragmático')
+        .replace(/Equilibrada/g, 'Equilibrado')
+        .replace(/equilibrada/g, 'equilibrado')
+        .replace(/Organizada/g, 'Organizado')
+        .replace(/organizada/g, 'organizado')
+        .replace(/Ansiosa/g, 'Ansioso')
+        .replace(/ansiosa/g, 'ansioso')
+        .replace(/Sábia/g, 'Sábio')
+        .replace(/sábia/g, 'sábio');
+}
+
+// Hook: Intercepta quando o texto da persona é definido
+// Adicione isto onde você define o conteúdo de #persona-type
+window.ajustarPersonaPorGenero = function(nomeUsuario, textoPersona) {
+    const genero = detectarGenero(nomeUsuario);
+    return ajustarTextoPersona(textoPersona, genero);
+};
+</script>
 </body>
 </html>
