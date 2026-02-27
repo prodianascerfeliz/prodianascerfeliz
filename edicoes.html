@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edições - Pro dia nascer Feliz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 60px;
+        }
+
+        .logo {
+            font-size: 60px;
+            margin-bottom: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .user-status {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .user-status.logged-in {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .editions-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .edition-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .edition-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .edition-date {
+            font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+
+        .edition-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .edition-preview {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .edition-topics {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .topic-tag {
+            padding: 6px 12px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .lock-icon {
+            display: inline-block;
+            margin-left: 8px;
+            opacity: 0.5;
+        }
+
+        .cta-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-box h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .cta-box p {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            color: #fff;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☀️</div>
+            <h1>Arquivo de Edições</h1>
+            <p>Todas as newsletters já enviadas</p>
+        </div>
+
+        <div class="user-status" id="userStatus">
+            Carregando...
+        </div>
+
+        <div id="editionsContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Carregando edições...</p>
+            </div>
+        </div>
+
+        <div class="cta-box">
+            <h2>Quer receber todo dia?</h2>
+            <p>Cadastre-se grátis e receba a newsletter às 8h30</p>
+            <a href="/" class="btn">Quero me inscrever ☀️</a>
+        </div>
+    </div>
+
+    <script>
+        // Configuração da API
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwhz4hBt1cAojHParJ5xuVs8JQdwaaYZOtVW3JO0YhMWkTG34wg4HUp754wEm2qOdZb/exec'; // 
+
+        // Checa se usuário está logado
+        function checkAuth() {
+            const token = localStorage.getItem('auth_token');
+            const email = localStorage.getItem('user_email');
+            
+            if (token && email) {
+                document.getElementById('userStatus').innerHTML = `
+                    <span class="logged-in">✓ Logado como <strong>${email}</strong></span>
+                `;
+                document.getElementById('userStatus').classList.add('logged-in');
+                return { logged: true, email, token };
+            } else {
+                document.getElementById('userStatus').innerHTML = `
+                    <span>Você precisa estar cadastrado para ler as edições. <a href="/" style="color:#fff;text-decoration:underline;">Cadastre-se grátis</a></span>
+                `;
+                return { logged: false };
+            }
+        }
+
+        // Carrega lista de edições
+        async function loadEditions() {
+            const auth = checkAuth();
+            
+            try {
+                // Por enquanto, mock de dados
+                // Quando tiver a API, substitui por:
+                // const response = await fetch(`${API_URL}?action=list`);
+                // const editions = await response.json();
+                
+                const editions = generateMockEditions();
+                renderEditions(editions, auth.logged);
+                
+            } catch (error) {
+                document.getElementById('editionsContainer').innerHTML = `
+                    <div class="loading">
+                        <p style="color:#fff;">❌ Erro ao carregar edições</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Gera dados mock (substitui quando tiver API real)
+        function generateMockEditions() {
+            const editions = [];
+            const today = new Date();
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                const dateStr = date.toISOString().split('T')[0];
+                const displayDate = date.toLocaleDateString('pt-BR', { 
+                    day: 'numeric', 
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                editions.push({
+                    date: dateStr,
+                    displayDate: displayDate,
+                    title: i === 0 ? 'Edição de Hoje' : `Edição de ${displayDate}`,
+                    preview: 'Thread sobre salários, viral do motoboy, bastidores de campanha...',
+                    topics: ['Viralizando', 'Conspiração', 'Bastidores', 'Clima']
+                });
+            }
+            
+            return editions;
+        }
+
+        // Renderiza edições
+        function renderEditions(editions, isLogged) {
+            const container = document.getElementById('editionsContainer');
+            
+            const html = editions.map(edition => `
+                <div class="edition-card" onclick="openEdition('${edition.date}', ${isLogged})">
+                    <div class="edition-date">${edition.displayDate}</div>
+                    <div class="edition-title">
+                        ${edition.title}
+                        ${!isLogged ? '<span class="lock-icon">🔒</span>' : ''}
+                    </div>
+                    <div class="edition-preview">${edition.preview}</div>
+                    <div class="edition-topics">
+                        ${edition.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = `<div class="editions-grid">${html}</div>`;
+        }
+
+        // Abre edição
+        function openEdition(date, isLogged) {
+            if (!isLogged) {
+                alert('Você precisa estar cadastrado para ler as edições!\n\nCadastre-se grátis na página inicial.');
+                window.location.href = '/';
+                return;
+            }
+            
+            // Redireciona para página da edição
+            window.location.href = `/edicoes/${date}.html`;
+        }
+
+        // Carrega ao abrir página
+        loadEditions();
+    </script>
+</body>
+</html>
