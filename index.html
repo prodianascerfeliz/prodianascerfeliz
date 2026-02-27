@@ -11,7 +11,142 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* CHAT WIDGET STYLES */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD93D 0%, #FF8C42 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 140, 66, 0.4);
+            z-index: 9998;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 140, 66, 0.6);
+        }
+
+        .chat-button:active {
+            transform: scale(0.95);
+        }
+
+        .sun-icon {
+            font-size: 32px;
+            animation: rotateSun 20s linear infinite;
+        }
+
+        @keyframes rotateSun {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .chat-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-popup.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #FFD93D 0%, #FF8C42 100%);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: transform 0.2s;
+        }
+
+        .chat-close:hover {
+            transform: scale(1.2);
+        }
+
+        .chat-iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .chat-popup {
+                bottom: 0;
+                right: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+
+            .chat-button {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .sun-icon {
+                font-size: 28px;
+            }
+        }
+    </style>
 </head>
+<body>
 <body>
     <!-- Animated Sun Background -->
     <div class="sun-container">
@@ -378,10 +513,60 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#375952404419474558535e5659564454524551525b5e4d77505a565e5b1954585a">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
         </footer>
+
+    <!-- CHAT WIDGET -->
+    <button class="chat-button" id="chatButton" aria-label="Abrir chat">
+        <span class="sun-icon">☀️</span>
+    </button>
+
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <h3>
+                <span>☀️</span>
+                Como posso te ajudar?
+            </h3>
+            <button class="chat-close" id="chatClose" aria-label="Fechar chat">&times;</button>
+        </div>
+        <iframe 
+            class="chat-iframe"
+            src="https://embed.chatnode.ai/412043c3-4d89-4f9e-b9f6-4129732208a0"
+            allow="autoplay; clipboard-read; clipboard-write"
+        ></iframe>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Chat controls
+        (function() {
+            const chatButton = document.getElementById('chatButton');
+            const chatPopup = document.getElementById('chatPopup');
+            const chatClose = document.getElementById('chatClose');
+            
+            chatButton.addEventListener('click', function() {
+                chatPopup.classList.add('active');
+                chatButton.style.display = 'none';
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'chat_opened', {
+                        event_category: 'engagement',
+                        event_label: 'chatnode'
+                    });
+                }
+            });
+            
+            chatClose.addEventListener('click', function() {
+                chatPopup.classList.remove('active');
+                chatButton.style.display = 'flex';
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && chatPopup.classList.contains('active')) {
+                    chatPopup.classList.remove('active');
+                    chatButton.style.display = 'flex';
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
