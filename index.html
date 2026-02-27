@@ -147,8 +147,6 @@
     </style>
 </head>
 <body>
-<body>
-    <!-- Animated Sun Background -->
     <div class="sun-container">
         <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -277,7 +275,7 @@
             <!-- CTA Section -->
             <section class="section cta-section">
                 <p class="cta-text">5 perguntas. A gente calcula seu mapa. Você começa amanhã.</p>
-                <button class="cta-button" onclick="startQuiz()">Tá dentro →</button>
+                <button class="cta-button" onclick="startQuiz()">Inscrever Agora →</button>
             </section>
 
             <!-- Quiz Form -->
@@ -513,8 +511,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#375952404419474558535e5659564454524551525b5e4d77505a565e5b1954585a">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
-        </footer>
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#533d3624207d23213c373a323d322030362135363f3a2913343e323a3f7d303c3e">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
 
     <!-- CHAT WIDGET -->
     <button class="chat-button" id="chatButton" aria-label="Abrir chat">
@@ -536,6 +533,9 @@
         ></iframe>
     </div>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="script.js"></script>
+    
     <script>
         // Chat controls
         (function() {
@@ -543,29 +543,31 @@
             const chatPopup = document.getElementById('chatPopup');
             const chatClose = document.getElementById('chatClose');
             
-            chatButton.addEventListener('click', function() {
-                chatPopup.classList.add('active');
-                chatButton.style.display = 'none';
+            if (chatButton && chatPopup && chatClose) {
+                chatButton.addEventListener('click', function() {
+                    chatPopup.classList.add('active');
+                    chatButton.style.display = 'none';
+                    
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'chat_opened', {
+                            event_category: 'engagement',
+                            event_label: 'chatnode'
+                        });
+                    }
+                });
                 
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'chat_opened', {
-                        event_category: 'engagement',
-                        event_label: 'chatnode'
-                    });
-                }
-            });
-            
-            chatClose.addEventListener('click', function() {
-                chatPopup.classList.remove('active');
-                chatButton.style.display = 'flex';
-            });
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && chatPopup.classList.contains('active')) {
+                chatClose.addEventListener('click', function() {
                     chatPopup.classList.remove('active');
                     chatButton.style.display = 'flex';
-                }
-            });
+                });
+                
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && chatPopup.classList.contains('active')) {
+                        chatPopup.classList.remove('active');
+                        chatButton.style.display = 'flex';
+                    }
+                });
+            }
         })();
     </script>
 </body>
