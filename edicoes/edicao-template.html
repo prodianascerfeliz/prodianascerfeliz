@@ -7,248 +7,213 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        :root {
-            --orange: #FF6B35;
-            --yellow: #FFD23F;
-            --dark: #1a1a1a;
-            --text: #333;
-            --muted: #888;
-            --bg: #faf9f7;
-            --card-bg: #ffffff;
-        }
-
-        body {
-            background: var(--bg);
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* Loading screen */
-        #loadingScreen {
-            position: fixed; inset: 0;
-            background: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; gap: 20px;
-            z-index: 100;
-            transition: opacity 0.4s;
-        }
-        .loading-sun {
-            width: 60px; height: 60px;
+        .loading-spinner {
+            width: 50px; height: 50px;
+            border: 4px solid rgba(255,107,53,0.2);
+            border-top-color: #FF6B35;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--orange), var(--yellow));
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.8; }
-        }
-        #loadingScreen p { color: var(--muted); font-size: 14px; }
-
-        /* Header */
-        .site-header {
-            border-bottom: 1px solid #eee;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            position: sticky; top: 0; z-index: 10;
-        }
-        .site-header a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 14px;
-            display: flex; align-items: center; gap: 6px;
-            transition: color 0.2s;
-        }
-        .site-header a:hover { color: var(--orange); }
-        .header-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            color: var(--dark);
-            font-weight: 700;
-        }
-        .header-logo span { color: var(--orange); }
-
-        /* Page */
-        .page {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 48px 24px 80px;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
         }
 
-        /* Edition header */
-        .edition-header {
-            margin-bottom: 48px;
-            padding-bottom: 32px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .edition-date {
+        .edition-meta {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: rgba(255,107,53,0.08);
             border: 1px solid rgba(255,107,53,0.2);
-            color: var(--orange);
+            color: #FF6B35;
             font-size: 13px;
-            font-weight: 600;
-            padding: 6px 14px;
+            font-weight: 700;
+            padding: 6px 16px;
             border-radius: 100px;
-            margin-bottom: 20px;
+            margin-bottom: 32px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .edition-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 6vw, 48px);
-            font-weight: 900;
-            color: var(--dark);
-            line-height: 1.1;
-            margin-bottom: 12px;
-        }
-        .edition-title span { color: var(--orange); }
-        .edition-subtitle {
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.5;
-        }
 
-        /* Section cards */
-        .section-card {
-            background: var(--card-bg);
+        .edition-card {
+            background: #fff;
+            border: 1px solid #efefef;
             border-radius: 20px;
             padding: 32px;
             margin-bottom: 24px;
-            border: 1px solid #efefef;
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(16px);
             animation: fadeUp 0.5s ease forwards;
         }
-        .section-card:nth-child(1) { animation-delay: 0.1s; }
-        .section-card:nth-child(2) { animation-delay: 0.2s; }
-        .section-card:nth-child(3) { animation-delay: 0.3s; }
+        .edition-card:nth-child(1) { animation-delay: 0.05s; }
+        .edition-card:nth-child(2) { animation-delay: 0.15s; }
+        .edition-card:nth-child(3) { animation-delay: 0.25s; }
 
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-        .section-tag {
+        .card-tag {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             padding: 5px 12px;
             border-radius: 100px;
             margin-bottom: 16px;
         }
-        .tag-viral  { background: #fff3e0; color: #e65100; }
+        .tag-viral       { background: #fff3e0; color: #e65100; }
         .tag-conspiracao { background: #f3e5f5; color: #7b1fa2; }
-        .tag-bastidores { background: #e8f5e9; color: #2e7d32; }
+        .tag-bastidores  { background: #e8f5e9; color: #2e7d32; }
 
-        .section-lead {
-            font-family: 'Playfair Display', serif;
+        .card-lead {
             font-size: 20px;
-            font-weight: 700;
-            color: var(--dark);
+            font-weight: 800;
+            color: #111;
             line-height: 1.3;
             margin-bottom: 14px;
         }
-        .section-body {
+        .card-body {
             font-size: 15px;
-            line-height: 1.75;
+            line-height: 1.8;
             color: #444;
         }
-        .section-nugget {
+        .card-nugget {
             margin-top: 20px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             background: #faf9f7;
-            border-left: 3px solid var(--orange);
+            border-left: 3px solid #FF6B35;
             border-radius: 0 10px 10px 0;
             font-size: 14px;
-            color: var(--muted);
+            color: #777;
             font-style: italic;
             line-height: 1.6;
         }
 
-        /* Error / not found */
         .error-box {
             text-align: center;
             padding: 60px 20px;
-            color: var(--muted);
-        }
-        .error-box .emoji { font-size: 48px; margin-bottom: 16px; }
-        .error-box h3 { font-size: 20px; color: var(--dark); margin-bottom: 8px; }
-        .error-box p { font-size: 14px; line-height: 1.6; }
-
-        /* Footer CTA */
-        .footer-cta {
-            margin-top: 56px;
-            padding: 40px;
-            background: var(--dark);
+            color: #888;
+            background: #fff;
             border-radius: 20px;
+            border: 1px solid #efefef;
+        }
+        .error-box .error-emoji { font-size: 48px; margin-bottom: 16px; }
+        .error-box h3 { font-size: 20px; font-weight: 800; color: #222; margin-bottom: 8px; }
+        .error-box p  { font-size: 14px; line-height: 1.6; }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            transition: color 0.2s;
+        }
+        .nav-back:hover { color: #FF6B35; }
+
+        .edition-cta {
+            background: #111;
+            border-radius: 20px;
+            padding: 40px;
             text-align: center;
-            color: #fff;
+            margin-top: 48px;
+            margin-bottom: 60px;
         }
-        .footer-cta p { font-size: 14px; opacity: 0.6; margin-bottom: 8px; }
-        .footer-cta h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            margin-bottom: 24px;
-        }
-        .footer-cta h3 span { color: var(--yellow); }
-        .back-btn {
+        .edition-cta p { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 8px; }
+        .edition-cta h3 { color: #fff; font-size: 22px; font-weight: 900; margin-bottom: 24px; }
+        .edition-cta h3 span { color: #FFD23F; }
+        .edition-cta a {
             display: inline-block;
             padding: 14px 28px;
-            background: var(--orange);
+            background: #FF6B35;
             color: #fff;
             text-decoration: none;
             border-radius: 100px;
+            font-weight: 700;
             font-size: 14px;
-            font-weight: 600;
-            transition: transform 0.2s, background 0.2s;
+            transition: background 0.2s, transform 0.2s;
         }
-        .back-btn:hover { transform: translateY(-2px); background: #e55a25; }
+        .edition-cta a:hover { background: #e55a25; transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
-    <!-- Loading -->
-    <div id="loadingScreen">
-        <div class="loading-sun"></div>
-        <p>Buscando sua edição...</p>
+    <!-- Sol animado igual ao site -->
+    <div class="sun-container">
+        <svg class="sun-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF6B35;#FFD23F;#FF6B35" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                    <stop offset="100%" style="stop-color:#FF8C61;stop-opacity:1">
+                        <animate attributeName="stop-color" values="#FF8C61;#FFEB99;#FF8C61" dur="8s" repeatCount="indefinite"/>
+                    </stop>
+                </linearGradient>
+            </defs>
+            <circle cx="100" cy="100" r="60" fill="url(#sunGradient)">
+                <animate attributeName="r" values="60;65;60" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <g transform="translate(100, 100)">
+                <g class="rays">
+                    <line x1="0" y1="-80" x2="0" y2="-95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="56" y1="-56" x2="67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="80" y1="0" x2="95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="56" y1="56" x2="67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="0" y1="80" x2="0" y2="95" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-56" y1="56" x2="-67" y2="67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-80" y1="0" x2="-95" y2="0" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="-56" y1="-56" x2="-67" y2="-67" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+                    <animateTransform attributeName="transform" attributeType="XML" type="rotate"
+                        from="0" to="360" dur="60s" repeatCount="indefinite"/>
+                </g>
+            </g>
+        </svg>
     </div>
 
-    <!-- Header -->
-    <header class="site-header">
-        <a href="/edicoes.html">← Arquivo de edições</a>
-        <div class="header-logo">Pro dia nascer <span>Feliz</span></div>
-        <div style="width:120px"></div>
-    </header>
+    <div class="page-wrapper">
 
-    <!-- Content -->
-    <div class="page" id="pageContent" style="display:none;">
-        <div class="edition-header">
-            <div class="edition-date">☀️ <span id="editionDateLabel">Edição</span></div>
-            <h1 class="edition-title">Pro dia nascer <span>Feliz</span></h1>
-            <p class="edition-subtitle" id="editionSubtitle">Seu resumo diário do que importa</p>
-        </div>
+        <header class="hero" style="padding-bottom: 40px;">
+            <a href="/edicoes.html" class="nav-back">← Arquivo de edições</a>
 
-        <div id="sectionsContainer"></div>
+            <!-- Loading -->
+            <div id="loadingArea" style="text-align:center; padding: 40px 0;">
+                <div class="loading-spinner"></div>
+                <p style="color:#888; font-size:14px;">Buscando sua edição...</p>
+            </div>
 
-        <div class="footer-cta">
-            <p>Gostou desta edição?</p>
-            <h3>Receba todo dia no seu <span>email</span></h3>
-            <a href="/" class="back-btn">← Voltar para home</a>
-        </div>
+            <!-- Conteúdo do header (aparece após carregar) -->
+            <div id="headerContent" style="display:none;">
+                <div class="edition-meta">☀️ <span id="editionDateLabel"></span></div>
+                <h1 class="title">
+                    <span class="title-line">Pro dia nascer</span>
+                    <span class="title-line accent">Feliz</span>
+                </h1>
+                <p class="subtitle" id="editionSubtitle"></p>
+            </div>
+        </header>
+
+        <main class="content">
+            <div id="sectionsContainer"></div>
+
+            <div class="edition-cta" id="footerCta" style="display:none;">
+                <p>Gostou desta edição?</p>
+                <h3>Receba todo dia no seu <span>email</span></h3>
+                <a href="/edicoes.html">← Ver outras edições</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 — Pro dia nascer Feliz · <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="/privacidade.html">Privacidade</a></p>
+        </footer>
     </div>
 
     <script>
@@ -256,149 +221,130 @@
 
         // Pega a data da URL: /edicoes/2026-02-27.html
         function getDateFromURL() {
-            const path = window.location.pathname;
-            const match = path.match(/(\d{4}-\d{2}-\d{2})/);
+            const match = window.location.pathname.match(/(\d{4}-\d{2}-\d{2})/);
             return match ? match[1] : null;
         }
 
-        // Formata data para exibição
+        // Formata "2026-02-27" → "27 de fevereiro de 2026"
+        // Usa y,m,d separados para evitar fuso horário
         function formatDate(dateStr) {
-            const [y, m, d] = dateStr.split('-');
-            const date = new Date(y, m - 1, d);
-            return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return new Date(y, m - 1, d).toLocaleDateString('pt-BR', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
         }
 
-        // Configurações das seções
-        const SECTION_CONFIG = {
-            'VIRALIZANDO': { tag: 'tag-viral', emoji: '🔥', label: 'Viralizando' },
-            'CONSPIRACAO':  { tag: 'tag-conspiracao', emoji: '🔍', label: 'Conspiração' },
-            'BASTIDORES':   { tag: 'tag-bastidores', emoji: '🎭', label: 'Bastidores' },
-        };
+        // Mostra header e CTA após carregar
+        function showContent() {
+            document.getElementById('loadingArea').style.display = 'none';
+            document.getElementById('headerContent').style.display = 'block';
+            document.getElementById('footerCta').style.display = 'block';
+        }
 
-        // Renderiza as seções
-        function renderSections(sections) {
-            const container = document.getElementById('sectionsContainer');
-            
-            // Ordem desejada
-            const order = ['VIRALIZANDO', 'CONSPIRACAO', 'BASTIDORES'];
-            const sorted = order
-                .map(type => sections.find(s => s.tipo === type || s.type === type))
-                .filter(Boolean);
+        // Renderiza seções
+        function renderSections(ed) {
+            const cfg = {
+                viralizando: { tag: 'tag-viral',       emoji: '🔥', label: 'Viralizando' },
+                conspiracao:  { tag: 'tag-conspiracao', emoji: '🔍', label: 'Conspiração' },
+                bastidores:   { tag: 'tag-bastidores',  emoji: '🎭', label: 'Bastidores'  },
+            };
 
-            if (sorted.length === 0) {
-                container.innerHTML = `
-                    <div class="error-box">
-                        <div class="emoji">📭</div>
-                        <h3>Conteúdo não encontrado</h3>
-                        <p>Esta edição pode não ter sido gerada ainda.</p>
+            let html = '';
+            ['viralizando', 'conspiracao', 'bastidores'].forEach(tipo => {
+                const s = ed[tipo];
+                if (!s || !s.lead) return;
+                const c = cfg[tipo];
+                html += `
+                    <div class="edition-card">
+                        <div class="card-tag ${c.tag}">${c.emoji} ${c.label}</div>
+                        <div class="card-lead">${s.lead}</div>
+                        <div class="card-body">${s.corpo || ''}</div>
+                        ${s.nugget ? `<div class="card-nugget">${s.nugget}</div>` : ''}
                     </div>`;
-                return;
+            });
+
+            if (!html) {
+                html = `<div class="error-box">
+                    <div class="error-emoji">📭</div>
+                    <h3>Conteúdo não disponível</h3>
+                    <p>Esta edição ainda não foi gerada ou não está disponível.</p>
+                </div>`;
             }
 
-            container.innerHTML = sorted.map(s => {
-                const tipo = (s.tipo || s.type || '').toUpperCase();
-                const cfg = SECTION_CONFIG[tipo] || { tag: 'tag-viral', emoji: '📰', label: tipo };
-                return `
-                    <div class="section-card">
-                        <div class="section-tag ${cfg.tag}">${cfg.emoji} ${cfg.label}</div>
-                        <div class="section-lead">${s.lead || s.titulo || ''}</div>
-                        <div class="section-body">${s.corpo || s.body || ''}</div>
-                        ${s.nugget ? `<div class="section-nugget">${s.nugget}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
+            document.getElementById('sectionsContainer').innerHTML = html;
         }
 
-        // Busca conteúdo via JSONP
+        // Busca da API via JSONP (sem CORS)
         function fetchEdition(date, email) {
             return new Promise((resolve, reject) => {
-                const cbName = 'editionCb_' + Date.now();
+                const cb = 'edCb_' + Date.now();
                 const script = document.createElement('script');
 
-                const timeout = setTimeout(() => {
-                    script.remove();
-                    delete window[cbName];
+                const timer = setTimeout(() => {
+                    script.remove(); delete window[cb];
                     reject(new Error('timeout'));
-                }, 10000);
+                }, 12000);
 
-                window[cbName] = function(data) {
-                    clearTimeout(timeout);
-                    script.remove();
-                    delete window[cbName];
+                window[cb] = function(data) {
+                    clearTimeout(timer); script.remove(); delete window[cb];
                     resolve(data);
                 };
-
                 script.onerror = () => {
-                    clearTimeout(timeout);
-                    script.remove();
-                    delete window[cbName];
-                    reject(new Error('script error'));
+                    clearTimeout(timer); script.remove(); delete window[cb];
+                    reject(new Error('network'));
                 };
 
-                const params = `action=get&date=${date}&email=${encodeURIComponent(email)}&callback=${cbName}`;
-                script.src = `${API_URL}?${params}`;
+                script.src = `${API_URL}?action=get&date=${date}&email=${encodeURIComponent(email)}&callback=${cb}`;
                 document.head.appendChild(script);
             });
         }
 
-        // Inicializa a página
+        // Inicializa
         async function init() {
-            const date = getDateFromURL();
+            const date  = getDateFromURL();
             const email = localStorage.getItem('user_email');
 
-            if (!date) {
-                window.location.href = '/edicoes.html';
-                return;
-            }
-
-            // Sem email → volta para edicoes
-            if (!email) {
+            if (!date || !email) {
                 window.location.href = '/edicoes.html';
                 return;
             }
 
             // Atualiza cabeçalho
-            document.getElementById('editionDateLabel').textContent = formatDate(date);
+            const formatted = formatDate(date);
+            document.getElementById('editionDateLabel').textContent = formatted.toUpperCase();
             document.getElementById('editionSubtitle').textContent =
-                `Edição de ${formatDate(date)} · preparada especialmente para você`;
-            document.title = `Edição ${formatDate(date)} — Pro dia nascer Feliz`;
+                `Edição de ${formatted} · preparada especialmente para você`;
+            document.title = `${formatted} — Pro dia nascer Feliz`;
 
             try {
                 const data = await fetchEdition(date, email);
-
-                // Esconde loading, mostra conteúdo
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 400);
-                document.getElementById('pageContent').style.display = 'block';
+                showContent();
 
                 if (data && data.edition) {
-                    const ed = data.edition;
-                    // Converte o formato da API para o formato que renderSections espera
-                    const sections = [];
-                    if (ed.viralizando && ed.viralizando.lead) sections.push({ tipo: 'VIRALIZANDO', ...ed.viralizando });
-                    if (ed.conspiracao  && ed.conspiracao.lead)  sections.push({ tipo: 'CONSPIRACAO',  ...ed.conspiracao });
-                    if (ed.bastidores   && ed.bastidores.lead)   sections.push({ tipo: 'BASTIDORES',   ...ed.bastidores });
-                    renderSections(sections);
+                    renderSections(data.edition);
+                } else if (data && data.error) {
+                    document.getElementById('sectionsContainer').innerHTML = `
+                        <div class="error-box">
+                            <div class="error-emoji">🔒</div>
+                            <h3>Acesso negado</h3>
+                            <p>Este email não está cadastrado. <a href="/" style="color:#FF6B35;">Cadastre-se grátis</a></p>
+                        </div>`;
                 } else {
                     document.getElementById('sectionsContainer').innerHTML = `
                         <div class="error-box">
-                            <div class="emoji">📭</div>
-                            <h3>Edição não disponível</h3>
-                            <p>Esta edição ainda não foi gerada ou não está disponível.</p>
+                            <div class="error-emoji">📭</div>
+                            <h3>Edição não encontrada</h3>
+                            <p>Esta edição ainda não está disponível.</p>
                         </div>`;
                 }
 
             } catch (err) {
-                // Mesmo com erro, mostra a página
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 400);
-                document.getElementById('pageContent').style.display = 'block';
-
+                showContent();
                 document.getElementById('sectionsContainer').innerHTML = `
                     <div class="error-box">
-                        <div class="emoji">⚡</div>
+                        <div class="error-emoji">⚡</div>
                         <h3>Erro ao carregar</h3>
-                        <p>Não foi possível buscar o conteúdo desta edição. Tente novamente em instantes.</p>
+                        <p>Não foi possível buscar o conteúdo. Tente novamente em instantes.</p>
                     </div>`;
             }
         }
