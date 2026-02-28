@@ -325,7 +325,7 @@
                     script.remove();
                     delete window[callbackName];
                     
-                    if (data && data.isSubscriber) {
+                    if (data && data.subscriber) {
                         liberarAcesso(email, date);
                     } else {
                         msgEl.style.color = '#e53e3e';
