@@ -69,7 +69,7 @@
         <main class="content">
             <!-- User Status -->
             <section class="section">
-                <div id="userStatus" style="text-align:center;padding:20px;background:rgba(255,255,255,0.1);border-radius:12px;margin-bottom:40px;">
+                <div id="userStatus" style="text-align:center;padding:20px;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.2);border-radius:12px;margin-bottom:40px;color:#333;">
                     Carregando...
                 </div>
             </section>
@@ -78,8 +78,8 @@
             <section class="section">
                 <div id="editionsContainer">
                     <div style="text-align:center;padding:60px 20px;">
-                        <div style="width:50px;height:50px;border:4px solid rgba(255,255,255,0.2);border-top-color:#FF6B35;border-radius:50%;margin:0 auto 20px;animation:spin 1s linear infinite;"></div>
-                        <p style="color:#fff;">Carregando edições...</p>
+                        <div style="width:50px;height:50px;border:4px solid rgba(255,107,53,0.2);border-top-color:#FF6B35;border-radius:50%;margin:0 auto 20px;animation:spin 1s linear infinite;"></div>
+                        <p style="color:#666;">Carregando edições...</p>
                     </div>
                 </div>
             </section>
@@ -95,11 +95,11 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="mailto:news.prodianascerfeliz@gmail.com">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#97f9f2e0e4b9e7e5f8f3fef6f9f6e4f4f2e5f1f2fbfeedd7f0faf6fefbb9f4f8fa">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
         </footer>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Configuração da API
         const API_URL = 'https://script.google.com/macros/s/AKfycbykz3UvIyj3YBaJ2YaKdqNJLp-vu9gmmgbDcpEDTyNMPakG-Ox4x0wNr-IAYOQW23Yv/exec'; // ← URL da sua API
 
@@ -115,39 +115,69 @@
                 return { logged: true, email, token };
             } else {
                 document.getElementById('userStatus').innerHTML = `
-                    <span style="color:#fff;">🔒 Você precisa estar cadastrado para ler as edições. <a href="/" style="color:#FFD23F;text-decoration:underline;font-weight:600;">Cadastre-se grátis</a></span>
+                    <span style="color:#333;">🔒 Você precisa estar cadastrado para ler as edições. <a href="/" style="color:#FF6B35;text-decoration:underline;font-weight:600;">Cadastre-se grátis</a></span>
                 `;
                 return { logged: false };
             }
         }
 
-        // Carrega edições
-        async function loadEditions() {
+        // Carrega edições usando JSONP (evita CORS do Apps Script)
+        function loadEditions() {
             const auth = checkAuth();
+
+            // JSONP: cria script tag com callback
+            const callbackName = 'editionsCallback_' + Date.now();
+            const script = document.createElement('script');
             
-            try {
-                const response = await fetch(`${API_URL}?action=list`);
-                const data = await response.json();
-                
-                if (data.editions) {
+            let timedOut = false;
+            const timeout = setTimeout(() => {
+                timedOut = true;
+                cleanup();
+                console.warn('API timeout, usando mock');
+                renderEditions(generateMockEditions(), auth.logged);
+            }, 8000);
+
+            window[callbackName] = function(data) {
+                if (timedOut) return;
+                clearTimeout(timeout);
+                cleanup();
+                if (data && data.editions && data.editions.length > 0) {
                     renderEditions(data.editions, auth.logged);
                 } else {
-                    // Fallback: gera mock
-                    const mockEditions = generateMockEditions();
-                    renderEditions(mockEditions, auth.logged);
+                    renderEditions(generateMockEditions(), auth.logged);
                 }
-                
-            } catch (error) {
-                console.error('Erro:', error);
-                const mockEditions = generateMockEditions();
-                renderEditions(mockEditions, auth.logged);
+            };
+
+            function cleanup() {
+                if (script.parentNode) script.parentNode.removeChild(script);
+                delete window[callbackName];
             }
+
+            script.onerror = function() {
+                if (timedOut) return;
+                clearTimeout(timeout);
+                cleanup();
+                console.warn('API error, usando mock');
+                renderEditions(generateMockEditions(), auth.logged);
+            };
+
+            script.src = `${API_URL}?action=list&callback=${callbackName}`;
+            document.head.appendChild(script);
         }
 
-        // Mock de edições
+        // Mock de edições (fallback quando API não responde)
         function generateMockEditions() {
             const editions = [];
             const today = new Date();
+            const previews = [
+                'Thread viral sobre IA no trabalho, bastidores do Congresso, o que a mídia não contou...',
+                'Meme do dia, crise nos bastidores de uma grande empresa, conspiração econômica...',
+                'Trend do TikTok, o que aconteceu nos bastidores da política, segredo revelado...',
+                'Viral das redes, bastidores de celebridade, notícia que ninguém explicou direito...',
+                'Thread sobre mercado financeiro, fofoca corporativa, conspiração do dia...',
+                'O que viralizou ontem, bastidores do esporte, segredo de bastidor...',
+                'Trend surpresa, o que a imprensa omitiu, fofoca do mundo corporativo...',
+            ];
             
             for (let i = 0; i < 7; i++) {
                 const date = new Date(today);
@@ -164,7 +194,7 @@
                     date: dateStr,
                     displayDate: displayDate,
                     title: i === 0 ? 'Edição de Hoje' : `Edição de ${date.getDate()} de ${date.toLocaleDateString('pt-BR', {month: 'long'})}`,
-                    preview: 'Thread sobre salários, viral do motoboy, bastidores de campanha...',
+                    preview: previews[i % previews.length],
                     topics: ['Viralizando', 'Conspiração', 'Bastidores']
                 });
             }
@@ -219,13 +249,3 @@
         }
 
         // Carrega ao abrir
-        loadEditions();
-    </script>
-
-    <style>
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-</body>
-</html>
