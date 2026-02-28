@@ -230,16 +230,135 @@
             });
         }
 
-        // Abre edição
+        // Modal de verificação de email
         function openEdition(date, isLogged) {
-            if (!isLogged) {
-                alert('🔒 Você precisa estar cadastrado para ler as edições!\n\nCadastre-se grátis na página inicial.');
-                window.location.href = '/';
+            // Se já está logado, vai direto
+            if (isLogged) {
+                window.location.href = `/edicoes/${date}.html`;
+                return;
+            }
+
+            // Mostra modal de email
+            const modal = document.createElement('div');
+            modal.id = 'emailModal';
+            modal.style.cssText = `
+                position:fixed;top:0;left:0;width:100%;height:100%;
+                background:rgba(0,0,0,0.6);z-index:9999;
+                display:flex;align-items:center;justify-content:center;
+                padding:20px;box-sizing:border-box;
+            `;
+            modal.innerHTML = `
+                <div style="background:#fff;border-radius:20px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <div style="font-size:48px;margin-bottom:16px;">☀️</div>
+                    <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;color:#111;">Qual é o seu email?</h2>
+                    <p style="color:#666;font-size:14px;margin-bottom:24px;">Digite o email que você usou para se cadastrar</p>
+                    
+                    <input 
+                        type="email" 
+                        id="modalEmail" 
+                        placeholder="seu@email.com"
+                        style="width:100%;padding:14px 16px;border:2px solid #eee;border-radius:12px;font-size:16px;outline:none;box-sizing:border-box;margin-bottom:12px;font-family:Inter,sans-serif;"
+                        onkeypress="if(event.key==='Enter') verifyEmail('${date}')"
+                        onfocus="this.style.borderColor='#FF6B35'"
+                        onblur="this.style.borderColor='#eee'"
+                    />
+                    
+                    <div id="modalMsg" style="min-height:20px;font-size:13px;margin-bottom:16px;"></div>
+                    
+                    <button 
+                        onclick="verifyEmail('${date}')"
+                        style="width:100%;padding:16px;background:#111;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-bottom:12px;"
+                        onmouseover="this.style.background='#FF6B35'"
+                        onmouseout="this.style.background='#111'"
+                    >
+                        Acessar edição →
+                    </button>
+                    
+                    <button 
+                        onclick="document.getElementById('emailModal').remove()"
+                        style="background:none;border:none;color:#999;font-size:13px;cursor:pointer;font-family:Inter,sans-serif;"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Foca no input automaticamente
+            setTimeout(() => document.getElementById('modalEmail').focus(), 100);
+            
+            // Fecha ao clicar fora
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Verifica email na API
+        async function verifyEmail(date) {
+            const emailInput = document.getElementById('modalEmail');
+            const msgEl = document.getElementById('modalMsg');
+            const email = emailInput.value.trim().toLowerCase();
+            
+            if (!email || !email.includes('@')) {
+                msgEl.style.color = '#e53e3e';
+                msgEl.textContent = '⚠️ Digite um email válido';
                 return;
             }
             
-            // Redireciona para página da edição
-            window.location.href = `/edicoes/${date}.html`;
+            msgEl.style.color = '#666';
+            msgEl.textContent = '🔍 Verificando...';
+            
+            try {
+                // Verifica via JSONP
+                const callbackName = 'checkCallback_' + Date.now();
+                const script = document.createElement('script');
+                
+                const timeout = setTimeout(() => {
+                    script.remove();
+                    delete window[callbackName];
+                    // Se API falhar, libera mesmo assim (fallback generoso)
+                    liberarAcesso(email, date);
+                }, 6000);
+                
+                window[callbackName] = function(data) {
+                    clearTimeout(timeout);
+                    script.remove();
+                    delete window[callbackName];
+                    
+                    if (data && data.isSubscriber) {
+                        liberarAcesso(email, date);
+                    } else {
+                        msgEl.style.color = '#e53e3e';
+                        msgEl.textContent = '❌ Email não encontrado. Você já se cadastrou?';
+                        setTimeout(() => {
+                            document.getElementById('emailModal').remove();
+                            window.location.href = '/';
+                        }, 2500);
+                    }
+                };
+                
+                script.src = `${API_URL}?action=check&email=${encodeURIComponent(email)}&callback=${callbackName}`;
+                document.head.appendChild(script);
+                
+            } catch(e) {
+                liberarAcesso(email, date);
+            }
+        }
+
+        // Libera acesso e salva no localStorage
+        function liberarAcesso(email, date) {
+            localStorage.setItem('user_email', email);
+            localStorage.setItem('auth_token', 'auth_' + Date.now());
+            
+            const msgEl = document.getElementById('modalMsg');
+            if (msgEl) {
+                msgEl.style.color = '#10b981';
+                msgEl.textContent = '✅ Acesso liberado! Abrindo edição...';
+            }
+            
+            setTimeout(() => {
+                window.location.href = `/edicoes/${date}.html`;
+            }, 800);
         }
 
         // Carrega ao abrir
