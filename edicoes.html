@@ -95,7 +95,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#97f9f2e0e4b9e7e5f8f3fef6f9f6e4f4f2e5f1f2fbfeedd7f0faf6fefbb9f4f8fa">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
+            <p>© 2026 — Todos os direitos reservados para Pro dia nascer Feliz · <a href="/cdn-cgi/l/email-protection#c8a6adbfbbe6b8baa7aca1a9a6a9bbabadbaaeada4a1b288afa5a9a1a4e6aba7a5">Contato</a> · <a href="privacidade.html">Privacidade</a></p>
         </footer>
     </div>
 
@@ -121,30 +121,27 @@
             }
         }
 
-        // Carrega edições usando JSONP (evita CORS do Apps Script)
+        // Carrega edições — mostra mock imediatamente, atualiza quando API responder
         function loadEditions() {
             const auth = checkAuth();
 
-            // JSONP: cria script tag com callback
+            // Mostra mock IMEDIATAMENTE (sem esperar API)
+            renderEditions(generateMockEditions(), auth.logged);
+
+            // Tenta buscar da API via JSONP (evita CORS do Apps Script)
             const callbackName = 'editionsCallback_' + Date.now();
             const script = document.createElement('script');
             
-            let timedOut = false;
             const timeout = setTimeout(() => {
-                timedOut = true;
                 cleanup();
-                console.warn('API timeout, usando mock');
-                renderEditions(generateMockEditions(), auth.logged);
+                console.warn('API timeout — usando mock');
             }, 8000);
 
             window[callbackName] = function(data) {
-                if (timedOut) return;
                 clearTimeout(timeout);
                 cleanup();
                 if (data && data.editions && data.editions.length > 0) {
                     renderEditions(data.editions, auth.logged);
-                } else {
-                    renderEditions(generateMockEditions(), auth.logged);
                 }
             };
 
@@ -154,18 +151,15 @@
             }
 
             script.onerror = function() {
-                if (timedOut) return;
                 clearTimeout(timeout);
                 cleanup();
-                console.warn('API error, usando mock');
-                renderEditions(generateMockEditions(), auth.logged);
             };
 
             script.src = `${API_URL}?action=list&callback=${callbackName}`;
             document.head.appendChild(script);
         }
 
-        // Mock de edições (fallback quando API não responde)
+        // Mock de edições (fallback / conteúdo inicial enquanto API carrega)
         function generateMockEditions() {
             const editions = [];
             const today = new Date();
