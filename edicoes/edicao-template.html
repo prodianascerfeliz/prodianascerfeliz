@@ -3,385 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edição - Pro dia nascer Feliz</title>
+    <title>Edição — Pro dia nascer Feliz</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --orange: #FF6B35;
+            --yellow: #FFD23F;
+            --dark: #1a1a1a;
+            --text: #333;
+            --muted: #888;
+            --bg: #faf9f7;
+            --card-bg: #ffffff;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: #fafafa;
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
             min-height: 100vh;
         }
 
-        .navbar {
-            background: #fff;
-            border-bottom: 1px solid #e5e5e5;
-            padding: 20px;
+        /* Loading screen */
+        #loadingScreen {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 20px;
+            z-index: 100;
+            transition: opacity 0.4s;
         }
+        .loading-sun {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--yellow));
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+        #loadingScreen p { color: var(--muted); font-size: 14px; }
 
-        .navbar-content {
-            max-width: 800px;
-            margin: 0 auto;
+        /* Header */
+        .site-header {
+            border-bottom: 1px solid #eee;
+            padding: 16px 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            position: sticky; top: 0; z-index: 10;
+        }
+        .site-header a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex; align-items: center; gap: 6px;
+            transition: color 0.2s;
+        }
+        .site-header a:hover { color: var(--orange); }
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        .header-logo span { color: var(--orange); }
+
+        /* Page */
+        .page {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
         }
 
-        .logo-link {
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 900;
-            color: #1a1a1a;
-            display: flex;
+        /* Edition header */
+        .edition-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .edition-date {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .back-link {
-            color: #667eea;
-            text-decoration: none;
+            background: rgba(255,107,53,0.08);
+            border: 1px solid rgba(255,107,53,0.2);
+            color: var(--orange);
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .edition-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .edition-date {
-            font-size: 14px;
-            font-weight: 700;
-            color: #667eea;
+        .edition-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 6vw, 48px);
+            font-weight: 900;
+            color: var(--dark);
+            line-height: 1.1;
             margin-bottom: 12px;
         }
-
-        .edition-title {
-            font-size: 48px;
-            font-weight: 900;
-            color: #1a1a1a;
-            margin-bottom: 16px;
+        .edition-title span { color: var(--orange); }
+        .edition-subtitle {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.5;
         }
 
-        .section {
-            background: #fff;
-            border-radius: 16px;
-            padding: 40px;
+        /* Section cards */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 32px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #efefef;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+        .section-card:nth-child(1) { animation-delay: 0.1s; }
+        .section-card:nth-child(2) { animation-delay: 0.2s; }
+        .section-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .section-emoji {
-            font-size: 32px;
-            margin-bottom: 16px;
-        }
-
-        .section-label {
-            font-size: 12px;
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
             font-weight: 700;
-            color: #999;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 5px 12px;
+            border-radius: 100px;
             margin-bottom: 16px;
         }
+        .tag-viral  { background: #fff3e0; color: #e65100; }
+        .tag-conspiracao { background: #f3e5f5; color: #7b1fa2; }
+        .tag-bastidores { background: #e8f5e9; color: #2e7d32; }
 
         .section-lead {
-            font-size: 24px;
-            font-weight: 900;
-            color: #1a1a1a;
-            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
             line-height: 1.3;
+            margin-bottom: 14px;
         }
-
         .section-body {
-            font-size: 17px;
-            line-height: 1.7;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .section-nugget {
-            padding: 20px;
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            border-radius: 8px;
             font-size: 15px;
+            line-height: 1.75;
+            color: #444;
+        }
+        .section-nugget {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #faf9f7;
+            border-left: 3px solid var(--orange);
+            border-radius: 0 10px 10px 0;
+            font-size: 14px;
+            color: var(--muted);
             font-style: italic;
-            color: #666;
+            line-height: 1.6;
         }
 
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        .loading-content {
-            text-align: center;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e5e5e5;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .error-screen {
+        /* Error / not found */
+        .error-box {
             text-align: center;
             padding: 60px 20px;
+            color: var(--muted);
         }
+        .error-box .emoji { font-size: 48px; margin-bottom: 16px; }
+        .error-box h3 { font-size: 20px; color: var(--dark); margin-bottom: 8px; }
+        .error-box p { font-size: 14px; line-height: 1.6; }
 
-        .error-screen h2 {
-            font-size: 32px;
-            margin-bottom: 16px;
+        /* Footer CTA */
+        .footer-cta {
+            margin-top: 56px;
+            padding: 40px;
+            background: var(--dark);
+            border-radius: 20px;
+            text-align: center;
+            color: #fff;
         }
-
-        .error-screen p {
-            color: #666;
+        .footer-cta p { font-size: 14px; opacity: 0.6; margin-bottom: 8px; }
+        .footer-cta h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
             margin-bottom: 24px;
         }
-
-        .btn {
+        .footer-cta h3 span { color: var(--yellow); }
+        .back-btn {
             display: inline-block;
             padding: 14px 28px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--orange);
             color: #fff;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: transform 0.2s;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .edition-title {
-                font-size: 32px;
-            }
-
-            .section {
-                padding: 24px;
-            }
-
-            .section-lead {
-                font-size: 20px;
-            }
-        }
+        .back-btn:hover { transform: translateY(-2px); background: #e55a25; }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <p>Carregando edição...</p>
-        </div>
+
+    <!-- Loading -->
+    <div id="loadingScreen">
+        <div class="loading-sun"></div>
+        <p>Buscando sua edição...</p>
     </div>
 
-    <nav class="navbar">
-        <div class="navbar-content">
-            <a href="/" class="logo-link">
-                <span>☀️</span>
-                <span>Pro dia nascer Feliz</span>
-            </a>
-            <a href="/edicoes.html" class="back-link">← Todas as edições</a>
-        </div>
-    </nav>
+    <!-- Header -->
+    <header class="site-header">
+        <a href="/edicoes.html">← Arquivo de edições</a>
+        <div class="header-logo">Pro dia nascer <span>Feliz</span></div>
+        <div style="width:120px"></div>
+    </header>
 
-    <div class="container" id="content" style="display: none;">
+    <!-- Content -->
+    <div class="page" id="pageContent" style="display:none;">
         <div class="edition-header">
-            <div class="edition-date" id="editionDate"></div>
-            <h1 class="edition-title">Edição do dia</h1>
+            <div class="edition-date">☀️ <span id="editionDateLabel">Edição</span></div>
+            <h1 class="edition-title">Pro dia nascer <span>Feliz</span></h1>
+            <p class="edition-subtitle" id="editionSubtitle">Seu resumo diário do que importa</p>
         </div>
 
-        <!-- Viralizando -->
-        <div class="section">
-            <div class="section-emoji">🔥</div>
-            <div class="section-label">Viralizando</div>
-            <h2 class="section-lead" id="viralizando-lead"></h2>
-            <div class="section-body" id="viralizando-corpo"></div>
-            <div class="section-nugget" id="viralizando-nugget"></div>
-        </div>
+        <div id="sectionsContainer"></div>
 
-        <!-- Conspiração -->
-        <div class="section">
-            <div class="section-emoji">🕵️</div>
-            <div class="section-label">Conspiração</div>
-            <h2 class="section-lead" id="conspiracao-lead"></h2>
-            <div class="section-body" id="conspiracao-corpo"></div>
-            <div class="section-nugget" id="conspiracao-nugget"></div>
-        </div>
-
-        <!-- Bastidores -->
-        <div class="section">
-            <div class="section-emoji">📱</div>
-            <div class="section-label">Bastidores</div>
-            <h2 class="section-lead" id="bastidores-titulo"></h2>
-            <div class="section-body" id="bastidores-corpo"></div>
-            <div class="section-nugget" id="bastidores-nugget"></div>
-        </div>
-
-        <!-- Clima -->
-        <div class="section">
-            <div class="section-emoji">🌤️</div>
-            <div class="section-label">Clima</div>
-            <div class="section-body" id="clima-corpo"></div>
-        </div>
-
-        <!-- Missão -->
-        <div class="section">
-            <div class="section-emoji">💡</div>
-            <div class="section-label">Missão do Dia</div>
-            <div class="section-body" id="missao-corpo"></div>
+        <div class="footer-cta">
+            <p>Gostou desta edição?</p>
+            <h3>Receba todo dia no seu <span>email</span></h3>
+            <a href="/" class="back-btn">← Voltar para home</a>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbwhz4hBt1cAojHParJ5xuVs8JQdwaaYZOtVW3JO0YhMWkTG34wg4HUp754wEm2qOdZb/exec'; // 
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwhz4hBt1cAojHParJ5xuVs8JQdwaaYZOtVW3JO0YhMWkTG34wg4HUp754wEm2qOdZb/exec';
 
-        // Pega data da URL (ex: /edicoes/2026-02-26.html)
+        // Pega a data da URL: /edicoes/2026-02-27.html
         function getDateFromURL() {
             const path = window.location.pathname;
             const match = path.match(/(\d{4}-\d{2}-\d{2})/);
             return match ? match[1] : null;
         }
 
-        // Checa autenticação
-        function checkAuth() {
-            const email = localStorage.getItem('user_email');
-            const token = localStorage.getItem('auth_token');
-            
-            if (!email || !token) {
-                showError('Você precisa estar cadastrado', 'Faça seu cadastro para acessar as edições.');
-                return null;
-            }
-            
-            return email;
+        // Formata data para exibição
+        function formatDate(dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            const date = new Date(y, m - 1, d);
+            return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
-        // Carrega edição
-        async function loadEdition() {
-            const date = getDateFromURL();
-            const email = checkAuth();
+        // Configurações das seções
+        const SECTION_CONFIG = {
+            'VIRALIZANDO': { tag: 'tag-viral', emoji: '🔥', label: 'Viralizando' },
+            'CONSPIRACAO':  { tag: 'tag-conspiracao', emoji: '🔍', label: 'Conspiração' },
+            'BASTIDORES':   { tag: 'tag-bastidores', emoji: '🎭', label: 'Bastidores' },
+        };
+
+        // Renderiza as seções
+        function renderSections(sections) {
+            const container = document.getElementById('sectionsContainer');
             
-            if (!date) {
-                showError('Data inválida', 'Não conseguimos identificar a edição.');
+            // Ordem desejada
+            const order = ['VIRALIZANDO', 'CONSPIRACAO', 'BASTIDORES'];
+            const sorted = order
+                .map(type => sections.find(s => s.tipo === type || s.type === type))
+                .filter(Boolean);
+
+            if (sorted.length === 0) {
+                container.innerHTML = `
+                    <div class="error-box">
+                        <div class="emoji">📭</div>
+                        <h3>Conteúdo não encontrado</h3>
+                        <p>Esta edição pode não ter sido gerada ainda.</p>
+                    </div>`;
                 return;
             }
-            
-            if (!email) return;
-            
-            try {
-                const response = await fetch(`${API_URL}?action=get&date=${date}&email=${encodeURIComponent(email)}`);
-                const data = await response.json();
-                
-                if (data.error) {
-                    if (data._status === 401) {
-                        showError('Acesso negado', 'Você precisa ser assinante para acessar este conteúdo.');
-                    } else {
-                        showError('Erro', data.message || 'Não foi possível carregar a edição.');
-                    }
-                    return;
-                }
-                
-                renderEdition(data.edition);
-                
-            } catch (error) {
-                showError('Erro de conexão', 'Não foi possível carregar a edição. Tente novamente.');
-            }
+
+            container.innerHTML = sorted.map(s => {
+                const tipo = (s.tipo || s.type || '').toUpperCase();
+                const cfg = SECTION_CONFIG[tipo] || { tag: 'tag-viral', emoji: '📰', label: tipo };
+                return `
+                    <div class="section-card">
+                        <div class="section-tag ${cfg.tag}">${cfg.emoji} ${cfg.label}</div>
+                        <div class="section-lead">${s.lead || s.titulo || ''}</div>
+                        <div class="section-body">${s.corpo || s.body || ''}</div>
+                        ${s.nugget ? `<div class="section-nugget">${s.nugget}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
         }
 
-        // Renderiza conteúdo
-        function renderEdition(edition) {
-            // Data
-            const dateObj = new Date(edition.date + 'T00:00:00');
-            const displayDate = dateObj.toLocaleDateString('pt-BR', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
+        // Busca conteúdo via JSONP
+        function fetchEdition(date, email) {
+            return new Promise((resolve, reject) => {
+                const cbName = 'editionCb_' + Date.now();
+                const script = document.createElement('script');
+
+                const timeout = setTimeout(() => {
+                    script.remove();
+                    delete window[cbName];
+                    reject(new Error('timeout'));
+                }, 10000);
+
+                window[cbName] = function(data) {
+                    clearTimeout(timeout);
+                    script.remove();
+                    delete window[cbName];
+                    resolve(data);
+                };
+
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    script.remove();
+                    delete window[cbName];
+                    reject(new Error('script error'));
+                };
+
+                const params = `action=get&date=${date}&email=${encodeURIComponent(email)}&callback=${cbName}`;
+                script.src = `${API_URL}?${params}`;
+                document.head.appendChild(script);
             });
-            
-            document.getElementById('editionDate').textContent = displayDate;
-            
-            // Viralizando
-            if (edition.viralizando) {
-                document.getElementById('viralizando-lead').textContent = edition.viralizando.lead || '';
-                document.getElementById('viralizando-corpo').textContent = edition.viralizando.corpo || '';
-                document.getElementById('viralizando-nugget').textContent = edition.viralizando.nugget || '';
-            }
-            
-            // Conspiração
-            if (edition.conspiracao) {
-                document.getElementById('conspiracao-lead').textContent = edition.conspiracao.lead || '';
-                document.getElementById('conspiracao-corpo').textContent = edition.conspiracao.corpo || '';
-                document.getElementById('conspiracao-nugget').textContent = edition.conspiracao.nugget || '';
-            }
-            
-            // Bastidores
-            if (edition.bastidores) {
-                document.getElementById('bastidores-titulo').textContent = edition.bastidores.titulo || edition.bastidores.lead || '';
-                document.getElementById('bastidores-corpo').textContent = edition.bastidores.corpo || '';
-                document.getElementById('bastidores-nugget').textContent = edition.bastidores.nugget || '';
-            }
-            
-            // Clima
-            if (edition.clima) {
-                document.getElementById('clima-corpo').textContent = edition.clima.corpo || '';
-            }
-            
-            // Missão
-            if (edition.missao) {
-                document.getElementById('missao-corpo').textContent = edition.missao.corpo || '';
-            }
-            
-            // Mostra conteúdo
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
         }
 
-        // Mostra erro
-        function showError(title, message) {
-            document.getElementById('loadingScreen').innerHTML = `
-                <div class="error-screen">
-                    <h2>🔒 ${title}</h2>
-                    <p>${message}</p>
-                    <a href="/" class="btn">Fazer cadastro gratuito</a>
-                </div>
-            `;
+        // Inicializa a página
+        async function init() {
+            const date = getDateFromURL();
+            const email = localStorage.getItem('user_email');
+
+            if (!date) {
+                window.location.href = '/edicoes.html';
+                return;
+            }
+
+            // Sem email → volta para edicoes
+            if (!email) {
+                window.location.href = '/edicoes.html';
+                return;
+            }
+
+            // Atualiza cabeçalho
+            document.getElementById('editionDateLabel').textContent = formatDate(date);
+            document.getElementById('editionSubtitle').textContent =
+                `Edição de ${formatDate(date)} · preparada especialmente para você`;
+            document.title = `Edição ${formatDate(date)} — Pro dia nascer Feliz`;
+
+            try {
+                const data = await fetchEdition(date, email);
+
+                // Esconde loading, mostra conteúdo
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 400);
+                document.getElementById('pageContent').style.display = 'block';
+
+                if (data && data.edition) {
+                    const ed = data.edition;
+                    // Converte o formato da API para o formato que renderSections espera
+                    const sections = [];
+                    if (ed.viralizando && ed.viralizando.lead) sections.push({ tipo: 'VIRALIZANDO', ...ed.viralizando });
+                    if (ed.conspiracao  && ed.conspiracao.lead)  sections.push({ tipo: 'CONSPIRACAO',  ...ed.conspiracao });
+                    if (ed.bastidores   && ed.bastidores.lead)   sections.push({ tipo: 'BASTIDORES',   ...ed.bastidores });
+                    renderSections(sections);
+                } else {
+                    document.getElementById('sectionsContainer').innerHTML = `
+                        <div class="error-box">
+                            <div class="emoji">📭</div>
+                            <h3>Edição não disponível</h3>
+                            <p>Esta edição ainda não foi gerada ou não está disponível.</p>
+                        </div>`;
+                }
+
+            } catch (err) {
+                // Mesmo com erro, mostra a página
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 400);
+                document.getElementById('pageContent').style.display = 'block';
+
+                document.getElementById('sectionsContainer').innerHTML = `
+                    <div class="error-box">
+                        <div class="emoji">⚡</div>
+                        <h3>Erro ao carregar</h3>
+                        <p>Não foi possível buscar o conteúdo desta edição. Tente novamente em instantes.</p>
+                    </div>`;
+            }
         }
 
-        // Carrega ao abrir
-        loadEdition();
+        init();
     </script>
 </body>
 </html>
