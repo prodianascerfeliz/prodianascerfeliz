@@ -13,6 +13,52 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
+        /* IA DO DIA - DESTAQUE ESPECIAL */
+        .value-card.featured-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            position: relative;
+            border: none;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .value-card.featured-card .card-emoji {
+            font-size: 48px;
+        }
+        
+        .value-card.featured-card .card-title {
+            color: #fff;
+        }
+        
+        .value-card.featured-card .card-desc {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            .new-badge {
+                top: 12px;
+                right: 12px;
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+        }
+    </style>
+    
+    <style>
         /* CHAT WIDGET STYLES */
         .chat-button {
             position: fixed;
@@ -285,6 +331,14 @@
                 <h2 class="section-title">O que vem todo dia no seu email:</h2>
                 
                 <div class="value-grid-new">
+                    <!-- IA DO DIA - DESTAQUE ESPECIAL -->
+                    <div class="value-card featured-card">
+                        <div class="new-badge">✨ NOVO</div>
+                        <div class="card-emoji">🤖</div>
+                        <h3 class="card-title">IA do Dia — personalizada pra você</h3>
+                        <p class="card-desc">Descubra uma nova IA TODO DIA. Não aquela genérica de todo mundo — a IA IDEAL pro seu perfil. Se você é vendedor, recebe IAs de vendas. Se é criativo, recebe IAs de design. Já testada e aprovada. Link direto pra testar.</p>
+                    </div>
+
                     <div class="value-card">
                         <div class="card-emoji">⭐</div>
                         <h3 class="card-title">Horóscopo honesto</h3>
