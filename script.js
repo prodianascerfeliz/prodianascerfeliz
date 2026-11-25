@@ -545,8 +545,6 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
         cep: document.querySelector('input[name="cep"]').value,
         city: document.querySelector('input[name="city"]').value,
         birthdate: document.querySelector('input[name="birthdate"]').value,
-        birthtime: document.querySelector('input[name="birthtime"]').value,
-        ascendente_manual: document.querySelector('select[name="ascendente_manual"]').value,
         q1: Array.from(document.querySelectorAll('input[name="q1[]"]:checked')).map(cb => cb.value).join(', '),
         q2: Array.from(document.querySelectorAll('input[name="q2[]"]:checked')).map(cb => cb.value).join(', '),
         q3: Array.from(document.querySelectorAll('input[name="q3[]"]:checked')).map(cb => cb.value).join(', '),
@@ -557,7 +555,9 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
     const birthDate = new Date(formData.birthdate);
     const zodiac = getZodiacSign(birthDate.getDate(), birthDate.getMonth() + 1);
     
-    // Ascendant: usa manual se informado, senão calcula
+    // Ascendente não é mais coletado (horóscopo saiu da News em 24/11/2026)
+    const ascendant = null;
+    /* Cálculo antigo de ascendente, desativado:
     let ascendant;
     if (formData.ascendente_manual) {
         // Usuário informou manualmente - usa esse!
@@ -586,6 +586,7 @@ document.getElementById('quiz-form').addEventListener('submit', async function(e
         // Sem hora de nascimento
         ascendant = null;
     }
+    */
     
     const age = calculateAge(formData.birthdate);
     const persona = determinePersona(formData);
@@ -656,13 +657,8 @@ function showSuccess(data, zodiac, ascendant) {
     // Populate persona type
     document.getElementById('persona-type').textContent = `Você é ${data.persona}`;
     
-    // Build zodiac text with rarity
-    let zodiacText = `${zodiac.emoji} ${zodiac.sign}`;
-    if (ascendant) {
-        zodiacText += ` com ascendente em ${ascendant.emoji} ${ascendant.sign}`;
-        zodiacText += `<span class="rarity">(sua combinação é rara — só 8% da população tem isso!)</span>`;
-    }
-    document.getElementById('persona-zodiac').innerHTML = zodiacText;
+    // Signo não aparece mais na tela de boas-vindas (horóscopo saiu da News)
+    document.getElementById('persona-zodiac').style.display = 'none';
     
     // Build details sections
     let detailsHTML = '';
